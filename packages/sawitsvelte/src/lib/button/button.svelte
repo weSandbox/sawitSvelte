@@ -2,6 +2,7 @@
 	import type { ClassValue } from '../internal/cn.js';
 	import { cn } from '../internal/cn.js';
 	import { mergeProps } from '../internal/merge-props.js';
+	import Loader from '../loader/loader.svelte';
 	import { buttonVariants, type ButtonProps } from './button.svelte.js';
 
 	let {
@@ -64,21 +65,8 @@
 {:else}
 	<button {...sharedProps} {type} {disabled}>
 		{#if loading}
-			<svg
-				class="size-4 animate-spin"
-				viewBox="0 0 24 24"
-				fill="none"
-				aria-hidden="true"
-				data-slot="button-spinner"
-			>
-				<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="3" class="opacity-25" />
-				<path
-					d="M21 12a9 9 0 0 0-9-9"
-					stroke="currentColor"
-					stroke-width="3"
-					stroke-linecap="round"
-				/>
-			</svg>
+			<!-- The button already exposes `aria-busy`, so the loader stays decorative. -->
+			<Loader size="sm" label={null} data-slot="button-spinner" class="text-current" />
 		{/if}
 		{@render children?.()}
 	</button>

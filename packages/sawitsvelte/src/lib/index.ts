@@ -36,5 +36,7 @@ export {
 	type HeadingLevel
 } from './card/index.js';
 
+export { Loader, loaderVariants, type LoaderProps, type LoaderSize } from './loader/index.js';
+
 export { cn, type ClassValue } from './internal/cn.js';
 export { mergeProps, type Props } from './internal/merge-props.js';

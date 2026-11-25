@@ -69,6 +69,26 @@ describe('Button rendering', () => {
 		expect(classTokens(render())).toContain('shape-notch-br');
 	});
 
+	it('feeds the strain a stroke colour on every bordered variant', () => {
+		for (const variant of ['default', 'secondary', 'outline', 'destructive']) {
+			expect(
+				classTokens(render({ variant })).some((t) => t.startsWith('[--sawit-edge-color:'))
+			).toBe(true);
+		}
+		// Ghost has no edge at all.
+		expect(
+			classTokens(render({ variant: 'ghost' })).some((t) => t.startsWith('[--sawit-edge-color:'))
+		).toBe(false);
+	});
+
+	it('never lifts on hover', () => {
+		const tokens = classTokens(render());
+
+		// The element itself must not move; only the icon nudge and the press remain.
+		expect(tokens).not.toContain('hover:-translate-y-0.5');
+		expect(tokens).toContain('active:translate-y-px');
+	});
+
 	it('allows overriding the native type', () => {
 		expect(render({ type: 'submit' }).getAttribute('type')).toBe('submit');
 	});
@@ -98,7 +118,10 @@ describe('Button variants and sizes', () => {
 		expect(render({ variant: 'default' }).className).toContain('bg-primary');
 		expect(render({ variant: 'ghost' }).className).not.toContain('bg-primary');
 		expect(render({ variant: 'destructive' }).className).toContain('bg-destructive');
-		expect(render({ variant: 'outline' }).className).toContain('border-border-strong');
+		// The border is an inset stroke token now, not a native `border`.
+		expect(classTokens(render({ variant: 'outline' }))).toContain(
+			'[--sawit-edge-color:var(--border-strong)]'
+		);
 	});
 
 	const sizes = ['sm', 'default', 'lg', 'icon'] as const;
@@ -217,6 +240,14 @@ describe('Button loading state', () => {
 		await userEvent.click(page.getByRole('button'), { force: true });
 
 		expect(onclick).not.toHaveBeenCalled();
+	});
+
+	it('renders the spinner in the button own colour', () => {
+		const button = render({ loading: true });
+		const spinner = button.querySelector('[data-slot="button-spinner"]');
+
+		// Lime-on-lime would be invisible: the loader must inherit, not impose its ink.
+		expect(getComputedStyle(spinner as Element).color).toBe(getComputedStyle(button).color);
 	});
 
 	it('renders a decorative spinner hidden from assistive technology', () => {

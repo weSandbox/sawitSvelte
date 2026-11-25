@@ -109,3 +109,44 @@ themes — work without extra CSS.
   overrides.
 - Negative: cut corners are a stronger point of view than radii. A consumer who wants soft corners
   overrides the two shape tokens rather than fighting the component.
+
+## Amendment — stroke, hover, card mark, loader
+
+Follow-up refinement after living with the first pass.
+
+### The edge is an evenodd clip, not an SVG overlay
+
+Native `border` cannot follow a 45° edge, so the first pass left a gap along every chamfer. The
+fix considered an SVG `<polygon>` stroke, but an SVG needs pixel geometry: the notch is expressed
+in `px` on a content-sized element, and in the polymorphic `child` case the component does not own
+the element and cannot measure it. That would have meant a ResizeObserver in one path and no
+border in the other.
+
+Instead `shape-notch-br` paints its own edge as a pseudo-element clipped with
+`polygon(evenodd, <outer silhouette>, <inset silhouette>)`. Clipping keeps the _inside_, so the
+stroke has to be the complement of the inner shape — one path with both rings. It is pure CSS, it
+works identically for `<button>` and for a consumer's anchor, and the colour is the
+`--sawit-edge-color` token. `pointer-events: none` and a pseudo-element keep it out of the
+accessibility tree; focus stays the global outline and is never clipped.
+
+### Hover does not move the button
+
+The 2px lift read as jitter when buttons sit in a row. Hover now changes only surface and edge
+colour; `active` drops 1px for tactile feedback, and the icon nudge stays. Motion is still
+collapsed by `prefers-reduced-motion`.
+
+### Card keeps its shadow and gains a corner mark
+
+A clipped card cannot cast a shadow (measured in ADR-0008's spike), and a card needs elevation
+more than it needs a cut. Card therefore stays unclipped: `rounded-xl` with a tighter
+`rounded-br-sm` on the notch corner, plus a 45° `--sawit-corner-mark` hairline in
+`--border-accent`. `featured` adds the accent border and a tightened bloom. The mark is mirrored
+with `:dir(rtl)`.
+
+### Loader is the silhouette, not a spinner
+
+The loader traces the same polygon with `pathLength="100"`, so one lap is exactly `-100` dash
+offset and no geometry needs measuring. Colour defaults to `--accent-ink` — a hairline in
+fill-lime is too pale on light — and `Button` passes `text-current` so the in-button loader
+inherits the button's own text colour instead of going lime-on-lime. `label={null}` makes it
+decorative for parents that already announce `aria-busy`.

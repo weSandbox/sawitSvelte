@@ -39,6 +39,7 @@
 	--color-accent-foreground: var(--accent-foreground);
 	--color-accent-soft: var(--accent-soft);
 	--color-accent-soft-foreground: var(--accent-soft-foreground);
+	--color-accent-ink: var(--accent-ink);
 
 	--color-destructive: var(--destructive);
 	--color-destructive-foreground: var(--destructive-foreground);
@@ -107,12 +108,34 @@
  * follows.
  */
 @utility shape-notch-br {
+	position: relative;
 	clip-path: var(--sawit-shape-notch-br);
+
+	/*
+	 * The edge. A native border cannot turn a 45° corner, so the stroke is an
+	 * evenodd path — the silhouette minus an inset copy of itself — painted with
+	 * `--sawit-edge-color`. Clipping keeps what is inside, so the shape is the
+	 * *complement* of the inner polygon, which is what makes the stroke follow
+	 * every bevel and the notch exactly.
+	 *
+	 * It is a pseudo-element, so it inherits `opacity`, `pointer-events` is off, and
+	 * it never reaches the accessibility tree — the control keeps its own semantics.
+	 * Colour is a token (`--sawit-edge-color`), so `class` overrides still win.
+	 */
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background-color: var(--sawit-edge-color, transparent);
+		clip-path: var(--sawit-shape-notch-br-edge);
+		pointer-events: none;
+		transition: background-color var(--sawit-duration-fast) var(--sawit-ease-standard);
+	}
 }
 
 /*
- * Corner accent bracket. Uses logical properties so it mirrors correctly in RTL,
- * and sits inside the corner radius so it reads as a bracket rather than a border.
+ * Corner mark. A 45° hairline at the top corner — the card's echo of the button's
+ * cut, without clipping a surface that needs to cast a shadow.
  */
 @utility corner-accent {
 	position: relative;
@@ -120,13 +143,36 @@
 	&::after {
 		content: '';
 		position: absolute;
-		inset-block-start: 0.7rem;
-		inset-inline-end: 0.7rem;
-		inline-size: 1.15rem;
-		block-size: 1.15rem;
-		border-block-start: 1px solid var(--border-accent);
-		border-inline-end: 1px solid var(--border-accent);
-		border-start-end-radius: 0.45rem;
+		inset-block-start: 0.75rem;
+		inset-inline-end: 0.75rem;
+		inline-size: var(--sawit-corner-mark);
+		block-size: var(--sawit-corner-mark);
+		background-image: linear-gradient(
+			to top right,
+			transparent calc(50% - var(--sawit-corner-mark-weight) / 2),
+			var(--sawit-corner-mark-color) calc(50% - var(--sawit-corner-mark-weight) / 2)
+				calc(50% + var(--sawit-corner-mark-weight) / 2),
+			transparent calc(50% + var(--sawit-corner-mark-weight) / 2)
+		);
 		pointer-events: none;
 	}
+}
+
+/* The mark mirrors with the writing direction; gradients have no logical form. */
+.corner-accent:dir(rtl)::after {
+	background-image: linear-gradient(
+		to top left,
+		transparent calc(50% - var(--sawit-corner-mark-weight) / 2),
+		var(--sawit-corner-mark-color) calc(50% - var(--sawit-corner-mark-weight) / 2)
+			calc(50% + var(--sawit-corner-mark-weight) / 2),
+		transparent calc(50% + var(--sawit-corner-mark-weight) / 2)
+	);
+}
+
+/*
+ * Loader trace. The shape carries `pathLength="100"`, so dash units are
+ * percentages of the perimeter and the keyframes never need to know the geometry.
+ */
+@utility animate-trace {
+	animation: sawit-trace var(--sawit-trace-duration, 1.6s) linear infinite;
 }

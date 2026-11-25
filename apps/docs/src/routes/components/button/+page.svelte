@@ -70,8 +70,8 @@ ${close}`;
 	/** Hover and active are shown as static swatches; the classes are the real ones. */
 	const stateColumns = [
 		{ label: 'Rest', extra: '' },
-		{ label: 'Hover', extra: 'bg-primary-hover -translate-y-0.5' },
-		{ label: 'Active', extra: 'bg-primary-active' }
+		{ label: 'Hover', extra: 'bg-primary-hover' },
+		{ label: 'Pressed', extra: 'bg-primary-active translate-y-px' }
 	];
 
 	const propRows = [
@@ -235,8 +235,8 @@ ${close}`;
 		<div>
 			<dt class="text-sm font-semibold">The touch</dt>
 			<dd class="mt-1 text-sm text-muted-foreground">
-				Hover lifts 2px and brightens; press returns to the surface and darkens. Icons lean 2px into
-				the cut. All of it collapses under
+				Hover changes the surface and the edge colour but never moves the button; press drops it 1px
+				and darkens the fill. Icons lean 2px into the cut. All of it collapses under
 				<code class="font-mono text-xs">prefers-reduced-motion</code>.
 			</dd>
 		</div>
@@ -251,7 +251,7 @@ ${close}`;
 	</ThemePreview>
 
 	<Example title="Reuse the shape anywhere" code={shapeCode}>
-		<nav class="border border-border bg-surface-2 px-4 py-2 text-sm shape-notch-br">
+		<nav class="shape-notch-br border border-border bg-surface-2 px-4 py-2 text-sm">
 			Any element can take the cut
 		</nav>
 	</Example>
@@ -328,7 +328,7 @@ ${close}`;
 	</p>
 
 	<!-- Static swatches of the real classes; hover/active cannot be triggered in a screenshot. -->
-	<div class="mt-6 grid gap-4 sm:grid-cols-3">
+	<div class="mt-6 grid justify-items-start gap-4 sm:grid-cols-3">
 		{#each stateColumns as column (column.label)}
 			<div class="flex flex-col gap-2">
 				<span class="text-[11px] font-medium tracking-widest text-muted-foreground uppercase">

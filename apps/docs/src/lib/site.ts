@@ -23,7 +23,13 @@ export const NPM_PUBLISHED = false;
  * accepting an arbitrary string.
  */
 export type SitePath =
-	'/' | '/docs' | '/docs/tokens' | '/components' | '/components/button' | '/components/card';
+	| '/'
+	| '/docs'
+	| '/docs/tokens'
+	| '/components'
+	| '/components/button'
+	| '/components/card'
+	| '/components/loader';
 
 export interface NavItem {
 	label: string;
@@ -53,6 +59,11 @@ export const implementedComponents: ComponentEntry[] = [
 		name: 'Card',
 		href: '/components/card',
 		description: 'Six composable parts on one surface, with vertical rhythm owned by the root.'
+	},
+	{
+		name: 'Loader',
+		href: '/components/loader',
+		description: 'The button silhouette traced by a lime segment — the system’s busy state.'
 	}
 ];
 

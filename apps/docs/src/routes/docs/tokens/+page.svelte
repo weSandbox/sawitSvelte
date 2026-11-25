@@ -182,7 +182,7 @@
 		{#each notches as item (item.label)}
 			<div class="flex flex-col gap-2">
 				<div
-					class="flex h-11 items-center justify-center border border-border bg-surface-2 px-5 text-sm shape-notch-br"
+					class="shape-notch-br flex h-11 items-center justify-center border border-border bg-surface-2 px-5 text-sm"
 					style="--sawit-notch: {item.notch}; --sawit-bevel: {item.bevel}"
 				>
 					{item.label}

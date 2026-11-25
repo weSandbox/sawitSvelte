@@ -28,6 +28,11 @@
 			"svelte": "./dist/card/index.js",
 			"default": "./dist/card/index.js"
 		},
+		"./loader": {
+			"types": "./dist/loader/index.d.ts",
+			"svelte": "./dist/loader/index.js",
+			"default": "./dist/loader/index.js"
+		},
 		"./theme.css": "./dist/theme.css",
 		"./package.json": "./package.json"
 	},

@@ -45,8 +45,11 @@
 	/* A wash, not a surface: used for ghost/hover states over any backdrop. */
 	--accent-soft: oklch(0.841 0.238 128.85 / 0.18);
 	--accent-soft-foreground: var(--sawit-primary-900);
+	/* Lime as a hairline or text on the page: --primary is a fill and too pale here. */
+	--accent-ink: var(--sawit-primary-600);
 
-	--destructive: oklch(0.577 0.245 27.325);
+	/* Muted from a pure signal red so it belongs to the charcoal/lime palette. */
+	--destructive: oklch(0.575 0.19 27.5);
 	--destructive-foreground: oklch(0.985 0 0);
 	--success: oklch(0.596 0.145 163.225);
 	--success-foreground: oklch(0.985 0 0);
@@ -60,6 +63,8 @@
 	   (WCAG 1.4.11). `--border` stays subtle for decorative separators. */
 	--border-strong: var(--sawit-neutral-500);
 	--border-accent: oklch(0.648 0.2 131.684 / 0.55);
+	/* Stroke drawn over an accent fill; a tinted dark edge, never pure black. */
+	--edge-on-accent: oklch(0.155 0.008 145 / 0.28);
 	--input: var(--sawit-neutral-200);
 	--ring: var(--sawit-primary-700);
 
@@ -90,8 +95,18 @@
 	 * cuts soften the box, one large cut identifies the component. Both are tokens,
 	 * so a theme can dial the character up or down without touching a component.
 	 */
-	--sawit-notch: 14px;
+	--sawit-notch: 18px;
 	--sawit-bevel: 6px;
+
+	/*
+	 * Stroke that follows the silhouette. Native borders cannot run along a 45°
+	 * edge, so the edge is a second polygon inset by `--sawit-stroke` drawn over
+	 * the fill. On a diagonal the perpendicular offset d becomes d·√2 on both
+	 * axes, which is why every diagonal vertex carries the extra term.
+	 */
+	--sawit-stroke: 1px;
+	--sawit-stroke-diagonal: calc(var(--sawit-stroke) * 1.4142135);
+
 	--sawit-shape-notch-br: polygon(
 		0 var(--sawit-bevel),
 		var(--sawit-bevel) 0,
@@ -102,6 +117,46 @@
 		var(--sawit-bevel) 100%,
 		0 calc(100% - var(--sawit-bevel))
 	);
+
+	/*
+	 * The edge as a single evenodd path: outer silhouette plus the same shape
+	 * inset by `--sawit-stroke`, traced as a hole. Clipping keeps the inside, so
+	 * the stroke has to be the *complement* of the inner shape — one polygon with
+	 * both rings is the only CSS way to express that without a mask.
+	 */
+	--sawit-shape-notch-br-edge: polygon(
+		evenodd,
+		0 var(--sawit-bevel),
+		var(--sawit-bevel) 0,
+		calc(100% - var(--sawit-bevel)) 0,
+		100% var(--sawit-bevel),
+		100% calc(100% - var(--sawit-notch)),
+		calc(100% - var(--sawit-notch)) 100%,
+		var(--sawit-bevel) 100%,
+		0 calc(100% - var(--sawit-bevel)),
+		0 var(--sawit-bevel),
+		var(--sawit-stroke)
+			calc(var(--sawit-bevel) + var(--sawit-stroke-diagonal) - var(--sawit-stroke)),
+		calc(var(--sawit-bevel) + var(--sawit-stroke-diagonal) - var(--sawit-stroke))
+			var(--sawit-stroke),
+		calc(100% - var(--sawit-bevel) - var(--sawit-stroke-diagonal) + var(--sawit-stroke))
+			var(--sawit-stroke),
+		calc(100% - var(--sawit-stroke))
+			calc(var(--sawit-bevel) + var(--sawit-stroke-diagonal) - var(--sawit-stroke)),
+		calc(100% - var(--sawit-stroke))
+			calc(100% - var(--sawit-notch) - var(--sawit-stroke-diagonal) + var(--sawit-stroke)),
+		calc(100% - var(--sawit-notch) - var(--sawit-stroke-diagonal) + var(--sawit-stroke))
+			calc(100% - var(--sawit-stroke)),
+		calc(var(--sawit-bevel) + var(--sawit-stroke-diagonal) - var(--sawit-stroke))
+			calc(100% - var(--sawit-stroke)),
+		var(--sawit-stroke)
+			calc(100% - var(--sawit-bevel) - var(--sawit-stroke-diagonal) + var(--sawit-stroke))
+	);
+
+	/* Length of the card's 45° corner mark. */
+	--sawit-corner-mark: 2rem;
+	--sawit-corner-mark-weight: 1.5px;
+	--sawit-corner-mark-color: var(--border-accent);
 
 	--sawit-font-sans:
 		ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -117,12 +172,7 @@
 	/* Elevation for surfaces (cards) and the accent bloom for featured ones. */
 	--sawit-shadow-card: 0 1px 2px 0 oklch(0 0 0 / 0.06), 0 16px 40px -30px oklch(0 0 0 / 0.45);
 	--sawit-shadow-glow:
-		0 0 0 1px var(--border-accent), 0 22px 60px -30px oklch(0.648 0.2 131.684 / 0.5);
-
-	/* Inner edge for clipped silhouettes: an outer box-shadow would be clipped away. */
-	--sawit-edge-highlight: inset 0 1px 0 oklch(1 0 0 / 0.28);
-	--sawit-edge-shade: inset 0 -1px 0 oklch(0 0 0 / 0.22);
-	--sawit-edge: var(--sawit-edge-highlight), var(--sawit-edge-shade);
+		0 0 0 1px var(--border-accent), 0 16px 40px -32px oklch(0.648 0.2 131.684 / 0.35);
 
 	--sawit-duration-fast: 120ms;
 	--sawit-duration-base: 180ms;
@@ -181,9 +231,11 @@
 
 	--accent-soft: oklch(0.841 0.238 128.85 / 0.14);
 	--accent-soft-foreground: var(--sawit-primary-300);
+	--accent-ink: var(--sawit-primary-400);
 
-	--destructive: oklch(0.704 0.191 22.216);
-	--destructive-foreground: var(--sawit-charcoal-950);
+	/* Same value as light: a lighter red drops white text under 4.5:1. */
+	--destructive: oklch(0.575 0.19 27.5);
+	--destructive-foreground: oklch(0.985 0 0);
 	--success: oklch(0.765 0.177 163.223);
 	--success-foreground: var(--sawit-charcoal-950);
 	--warning: oklch(0.828 0.189 84.429);
@@ -195,6 +247,7 @@
 	/* Same 3:1 rule as light mode; 18% white over charcoal did not reach it. */
 	--border-strong: oklch(1 0 0 / 0.34);
 	--border-accent: oklch(0.841 0.238 128.85 / 0.45);
+	--edge-on-accent: oklch(0.155 0.008 145 / 0.34);
 	--input: oklch(1 0 0 / 0.14);
 	--ring: var(--sawit-primary-400);
 
@@ -222,9 +275,5 @@
 
 	--sawit-shadow-card: 0 1px 2px 0 oklch(0 0 0 / 0.5), 0 18px 44px -32px oklch(0 0 0 / 0.9);
 	--sawit-shadow-glow:
-		0 0 0 1px var(--border-accent), 0 24px 64px -30px oklch(0.841 0.238 128.85 / 0.35);
-
-	--sawit-edge-highlight: inset 0 1px 0 oklch(1 0 0 / 0.16);
-	--sawit-edge-shade: inset 0 -1px 0 oklch(0 0 0 / 0.35);
-	--sawit-edge: var(--sawit-edge-highlight), var(--sawit-edge-shade);
+		0 0 0 1px var(--border-accent), 0 20px 48px -30px oklch(0.841 0.238 128.85 / 0.4);
 }

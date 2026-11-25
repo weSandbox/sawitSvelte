@@ -66,9 +66,28 @@
 @media (forced-colors: active) {
 	.shape-notch-br {
 		clip-path: none;
+		border: 1px solid CanvasText;
+	}
+
+	/* The inset stroke is decorative here; the real border above replaces it. */
+	.shape-notch-br::before {
+		display: none;
 	}
 
 	:focus-visible {
 		outline: 2px solid CanvasText;
+	}
+}
+
+/*
+ * Loader trace. `pathLength="100"` normalises the perimeter, so a dash offset of
+ * -100 is exactly one lap regardless of the shape's size.
+ */
+@keyframes sawit-trace {
+	from {
+		stroke-dashoffset: 0;
+	}
+	to {
+		stroke-dashoffset: -100;
 	}
 }

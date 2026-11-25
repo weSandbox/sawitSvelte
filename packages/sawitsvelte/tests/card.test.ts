@@ -175,7 +175,7 @@ describe('Card polymorphic root', () => {
 
 		expect(element.getAttribute('data-slot')).toBe('card');
 		expect(classTokens(element)).toContain('bg-card');
-		expect(classTokens(element)).toContain('rounded-xl');
+		expect(classTokens(element)).toContain('rounded-tl-xl');
 	});
 });
 

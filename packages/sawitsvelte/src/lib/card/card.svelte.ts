@@ -17,7 +17,7 @@ import type { ClassValue } from '../internal/cn.js';
  */
 export const cardVariants = tv({
 	slots: {
-		root: 'corner-accent relative flex flex-col gap-6 rounded-xl border border-border bg-card py-6 text-card-foreground shadow-card',
+		root: 'corner-accent relative flex flex-col gap-6 rounded-tl-xl rounded-tr-xl rounded-bl-xl rounded-br-sm border border-border bg-card py-6 text-card-foreground shadow-card',
 		header: 'flex flex-col gap-2 px-6',
 		title: 'text-base leading-tight font-semibold tracking-tight',
 		description: 'text-sm leading-relaxed text-muted-foreground',
