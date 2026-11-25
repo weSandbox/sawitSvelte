@@ -33,8 +33,14 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Unit tests
+      - name: Tests (unit + browser + axe)
+        # Browser tests use an installed Chrome (GitHub's ubuntu image ships one).
+        # On an image without Chrome, set SAWIT_BROWSER_CHANNEL=bundled and run
+        # `pnpm exec playwright install chromium` first.
         run: pnpm test
+
+      - name: Bundle size budget
+        run: pnpm size
 
       - name: Build docs
         run: pnpm --filter @sawitsvelte/docs build

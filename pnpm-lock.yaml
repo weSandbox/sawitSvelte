@@ -72,9 +72,6 @@ importers:
 
   packages/sawitsvelte:
     dependencies:
-      tailwind-merge:
-        specifier: ^3.7.1
-        version: 3.7.1
       tailwind-variants:
         specifier: ^4.0.2
         version: 4.0.2
@@ -91,12 +88,18 @@ importers:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.3.2
         version: 7.3.2(svelte@5.59.1(@typescript-eslint/types@8.74.0))(vite@8.3.8(jiti@2.7.0))
+      '@tailwindcss/vite':
+        specifier: ^4.3.5
+        version: 4.3.5(vite@8.3.8(jiti@2.7.0))
       '@vitest/browser':
         specifier: ^5.1.1
         version: 5.1.1(vite@8.3.8(jiti@2.7.0))(vitest@5.1.1)
       '@vitest/browser-playwright':
         specifier: 5.1.1
         version: 5.1.1(playwright@1.65.1)(vite@8.3.8(jiti@2.7.0))(vitest@5.1.1)
+      axe-core:
+        specifier: ^4.14.1
+        version: 4.14.1
       playwright:
         specifier: ^1.65.1
         version: 1.65.1
@@ -106,9 +109,15 @@ importers:
       svelte-check:
         specifier: ^4.7.8
         version: 4.7.8(picomatch@4.0.7)(svelte@5.59.1(@typescript-eslint/types@8.74.0))(typescript@6.0.3)
+      tailwindcss:
+        specifier: ^4.3.5
+        version: 4.3.5
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
+      vite:
+        specifier: ^8.3.8
+        version: 8.3.8(jiti@2.7.0)
       vitest:
         specifier: ^5.1.1
         version: 5.1.1(@vitest/browser-playwright@5.1.1)(@vitest/ui@5.1.1)(vite@8.3.8(jiti@2.7.0))
@@ -622,6 +631,10 @@ packages:
   assertion-error@2.0.1:
     resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==}
     engines: {node: '>=12'}
+
+  axe-core@4.14.1:
+    resolution: {integrity: sha512-FHfa+lmNjQZfJz1q8wKqIDwC6DExcHt/pkjNQb09a3NPjCKg2rhu5qb2S4r76ASyFNNtuFooJpZe37OgudVGtQ==}
+    engines: {node: '>=4'}
 
   axobject-query@4.1.0:
     resolution: {integrity: sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ==}
@@ -1243,9 +1256,6 @@ packages:
   svelte@5.59.1:
     resolution: {integrity: sha512-ADG20W/jYSQut/79AavRRfbXQYebFKMVWT/xAbjVVZfZA4XzIoFfcpanEfYTyN+uWQUaPP+nstFx4qVKwEVnQQ==}
     engines: {node: '>=18'}
-
-  tailwind-merge@3.7.1:
-    resolution: {integrity: sha512-v7y4BV4FUlO8exj/4M5UXKeoowDiuugVUg3tkMNIyOUCOHy5xp8+5aWQeXCtZ2491sUV1YPsVeM9EveZ6/xuZQ==}
 
   tailwind-variants@4.0.2:
     resolution: {integrity: sha512-sZvOFkfe5LlYG/crRX5IvP3oUHmJPu+7WmrLQFvF0kCRq51C+lurlzFMm/jURG/5keT7VOJ/it0N3jkzYux85w==}
@@ -1920,6 +1930,8 @@ snapshots:
 
   assertion-error@2.0.1: {}
 
+  axe-core@4.14.1: {}
+
   axobject-query@4.1.0: {}
 
   balanced-match@4.0.4: {}
@@ -2445,8 +2457,6 @@ snapshots:
       zimmerframe: 1.1.5
     transitivePeerDependencies:
       - '@typescript-eslint/types'
-
-  tailwind-merge@3.7.1: {}
 
   tailwind-variants@4.0.2: {}
 

@@ -1,0 +1,18 @@
+/*
+ * Real styles for component tests.
+ *
+ * Accessibility scans have to run against the actual design system: axe's
+ * colour-contrast rule inspects computed colours, so without this file every
+ * `bg-primary` would be a no-op and contrast checks would silently pass over
+ * unstyled markup.
+ *
+ * Sources come from the tokens package (not its build output) so tests never
+ * depend on `pnpm build` having run first.
+ */
+@import 'tailwindcss';
+@import '@sawitsvelte/tokens/base.css';
+@import '@sawitsvelte/tokens/palette.css';
+@import '@sawitsvelte/tokens/semantic.css';
+@import '@sawitsvelte/tokens/bridge.css';
+
+@source '../../src';

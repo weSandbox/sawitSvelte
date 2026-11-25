@@ -179,13 +179,33 @@ describe('Button disabled state', () => {
 });
 
 describe('Button loading state', () => {
-	it('exposes busy state and blocks activation', () => {
+	it('exposes busy state without natively disabling the button', () => {
 		const button = render({ loading: true });
 
 		expect(button.hasAttribute('data-loading')).toBe(true);
 		expect(button.hasAttribute('data-disabled')).toBe(true);
 		expect(button.getAttribute('aria-busy')).toBe('true');
-		expect(button.disabled).toBe(true);
+		expect(button.getAttribute('aria-disabled')).toBe('true');
+		// ADR-0007: loading keeps the button focusable, so it must NOT be natively
+		// disabled — disabling it would drop focus to <body> mid-interaction.
+		expect(button.disabled).toBe(false);
+	});
+
+	it('keeps focus while loading', () => {
+		const button = render({ loading: true });
+
+		button.focus();
+
+		expect(document.activeElement).toBe(button);
+	});
+
+	it('blocks pointer activation while loading', async () => {
+		const onclick = vi.fn();
+		render({ loading: true, onclick });
+
+		await userEvent.click(page.getByRole('button'), { force: true });
+
+		expect(onclick).not.toHaveBeenCalled();
 	});
 
 	it('renders a decorative spinner hidden from assistive technology', () => {

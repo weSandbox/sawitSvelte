@@ -8,20 +8,21 @@ behavior layer.
 ## Status
 
 **Phase 2 — Core components.** Foundation is complete (design tokens, runtime theming, styling
-utilities) and `Button` is the first shipped component and the reference implementation for the
-rest. See [`docs/adr/0005-component-contract.md`](./docs/adr/0005-component-contract.md).
+utilities). `Button` is the reference implementation and `Card` is the first multipart component,
+which validated that the contract scales. See [`docs/adr`](./docs/adr) and
+[`docs/technical-debt.md`](./docs/technical-debt.md).
 
 ## Stack
 
-| Concern     | Choice                                                                            |
-| ----------- | --------------------------------------------------------------------------------- |
-| Framework   | Svelte 5 (runes), TypeScript strict                                               |
-| Styling     | Tailwind CSS v4, CSS-first (`@theme inline` bridge)                               |
-| Tokens      | CSS variables, two-tier (palette → semantic)                                      |
-| Positioning | `@floating-ui/dom` behind an own facade (Phase 3)                                 |
-| Build       | `@sveltejs/package`, pnpm workspaces                                              |
-| Docs        | SvelteKit 3 + `adapter-static`                                                    |
-| Tests       | Vitest — node for logic, real Chromium for components, Playwright + axe (Phase 3) |
+| Concern     | Choice                                                              |
+| ----------- | ------------------------------------------------------------------- |
+| Framework   | Svelte 5 (runes), TypeScript strict                                 |
+| Styling     | Tailwind CSS v4, CSS-first (`@theme inline` bridge)                 |
+| Tokens      | CSS variables, two-tier (palette → semantic)                        |
+| Positioning | `@floating-ui/dom` behind an own facade (Phase 3)                   |
+| Build       | `@sveltejs/package`, pnpm workspaces                                |
+| Docs        | SvelteKit 3 + `adapter-static`                                      |
+| Tests       | Vitest — node for logic, real Chromium for components, axe for a11y |
 
 ## Layout
 
@@ -40,7 +41,8 @@ pnpm install
 pnpm dev        # builds packages, then serves the docs site
 pnpm build      # all packages
 pnpm check      # svelte-check across the workspace
-pnpm test
+pnpm test       # unit (node) + component and accessibility tests (Chromium + axe)
+pnpm size       # measured gzip budget per entry
 pnpm format
 ```
 
@@ -62,6 +64,27 @@ Polymorphic rendering uses a `child` snippet, so the rendered element stays your
 {/snippet}
 
 <Button child={link} variant="outline" />
+```
+
+Multipart components use a namespace of parts:
+
+```svelte
+<script lang="ts">
+	import { Button, Card } from 'sawitsvelte';
+</script>
+
+<Card.Root>
+	<Card.Header>
+		<Card.Title>Create project</Card.Title>
+		<Card.Description>Deploy your new project in one click.</Card.Description>
+	</Card.Header>
+	<Card.Content>
+		<p>Your project will be created in the selected region.</p>
+	</Card.Content>
+	<Card.Footer>
+		<Button>Deploy</Button>
+	</Card.Footer>
+</Card.Root>
 ```
 
 ```css

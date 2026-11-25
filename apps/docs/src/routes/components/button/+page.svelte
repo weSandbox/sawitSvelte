@@ -52,7 +52,7 @@ ${close}`;
 
 <Button child={link} variant="outline" />`;
 
-	const classNameCode = `<Button class="bg-red-500 hover:bg-red-600">Custom</Button>`;
+	const classNameCode = `<Button class="bg-red-600 text-white hover:bg-red-700">Custom</Button>`;
 
 	const propRows = [
 		{
@@ -159,6 +159,14 @@ ${close}`;
 	<a href="https://svelte.dev" {...props}>Disabled link</a>
 {/snippet}
 
+<svelte:head>
+	<title>Button — sawitSvelte</title>
+	<meta
+		name="description"
+		content="Button is the reference sawitSvelte component: five variants, four sizes, a loading state, and polymorphism through a child snippet."
+	/>
+</svelte:head>
+
 <div class="max-w-3xl">
 	<p class="text-xs font-medium tracking-widest text-muted-foreground uppercase">Components</p>
 	<h1 class="mt-3 text-4xl font-semibold tracking-tight">Button</h1>
@@ -257,7 +265,7 @@ ${close}`;
 		resolve in your favour regardless of stylesheet order.
 	</p>
 	<Example code={classNameCode}>
-		<Button class="bg-red-500 hover:bg-red-600">Custom</Button>
+		<Button class="bg-red-600 text-white hover:bg-red-700">Custom</Button>
 	</Example>
 </section>
 

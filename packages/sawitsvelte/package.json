@@ -23,13 +23,19 @@
 			"svelte": "./dist/button/index.js",
 			"default": "./dist/button/index.js"
 		},
+		"./card": {
+			"types": "./dist/card/index.d.ts",
+			"svelte": "./dist/card/index.js",
+			"default": "./dist/card/index.js"
+		},
 		"./theme.css": "./dist/theme.css",
 		"./package.json": "./package.json"
 	},
 	"scripts": {
 		"build": "svelte-package -i src/lib -o dist && node scripts/build-css.mjs",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
-		"test": "vitest run"
+		"test": "vitest run",
+		"size": "node scripts/measure-size.mjs"
 	},
 	"peerDependencies": {
 		"svelte": "^5.0.0"
@@ -39,16 +45,19 @@
 		"@sawitsvelte/tsconfig": "workspace:*",
 		"@sveltejs/package": "^3.0.3",
 		"@sveltejs/vite-plugin-svelte": "^7.3.2",
+		"@tailwindcss/vite": "^4.3.5",
 		"@vitest/browser": "^5.1.1",
 		"@vitest/browser-playwright": "5.1.1",
+		"axe-core": "^4.14.1",
 		"playwright": "^1.65.1",
 		"svelte": "^5.57.3",
 		"svelte-check": "^4.7.8",
+		"tailwindcss": "^4.3.5",
 		"typescript": "^6.0.3",
+		"vite": "^8.3.8",
 		"vitest": "^5.1.1"
 	},
 	"dependencies": {
-		"tailwind-merge": "^3.7.1",
 		"tailwind-variants": "^4.0.2"
 	}
 }

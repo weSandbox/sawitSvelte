@@ -61,9 +61,12 @@ export type ButtonProps = Omit<HTMLButtonAttributes, 'class'> &
 		variant?: ButtonVariant;
 		/** Control height and horizontal padding. Default: `default`. */
 		size?: ButtonSize;
-		/** Prevents activation and marks the button unavailable. */
+		/** Permanently unavailable: sets the native `disabled` attribute. */
 		disabled?: boolean;
-		/** Busy state: shows a spinner, blocks activation, sets `aria-busy`. */
+		/**
+		 * Temporarily busy: shows a spinner, sets `aria-busy` and `aria-disabled`,
+		 * and blocks activation while **keeping focus** (see ADR-0007).
+		 */
 		loading?: boolean;
 		/** Stretches the button to its container width. */
 		fullWidth?: boolean;

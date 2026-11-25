@@ -17,7 +17,18 @@
 		...rest
 	}: ButtonProps = $props();
 
-	const isDisabled = $derived(disabled || loading);
+	/**
+	 * Unavailable and disabled are deliberately different.
+	 *
+	 * `disabled` is permanent: the native attribute removes the button from the
+	 * tab order, which is the correct statement of intent.
+	 *
+	 * `loading` is temporary and often follows an activation the user is waiting
+	 * on. Disabling it natively would drop focus to `<body>` mid-interaction and
+	 * lose a screen reader user's place, so it stays focusable and is blocked via
+	 * ARIA plus a cancelled click instead.
+	 */
+	const unavailable = $derived(disabled || loading);
 
 	/**
 	 * Everything a child element can receive. `type` and `disabled` are excluded
@@ -30,15 +41,17 @@
 				'data-slot': 'button',
 				'data-variant': variant,
 				'data-size': size,
-				'data-disabled': isDisabled ? '' : undefined,
+				'data-disabled': unavailable ? '' : undefined,
 				'data-loading': loading ? '' : undefined,
-				'aria-disabled': isDisabled ? 'true' : undefined,
+				'aria-disabled': unavailable ? 'true' : undefined,
 				'aria-busy': loading ? 'true' : undefined,
 				class: cn(buttonVariants({ variant, size, fullWidth }), className as ClassValue),
-				// Runs first: preventing the default is what makes a disabled button
-				// inert even when the child is an anchor, where `disabled` means nothing.
+				// Runs first: preventing the default is what makes an unavailable
+				// button inert even when the child is an anchor, where `disabled`
+				// means nothing, and it is what stops a loading button from
+				// submitting a form twice.
 				onclick: (event: Event) => {
-					if (isDisabled) event.preventDefault();
+					if (unavailable) event.preventDefault();
 				}
 			},
 			rest
@@ -49,7 +62,7 @@
 {#if child}
 	{@render child({ props: sharedProps })}
 {:else}
-	<button {...sharedProps} {type} disabled={isDisabled}>
+	<button {...sharedProps} {type} {disabled}>
 		{#if loading}
 			<svg
 				class="size-4 animate-spin"

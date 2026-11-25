@@ -45,6 +45,42 @@ attributes and withholds `type`/`disabled`, which are invalid outside form contr
 <Button child={link} variant="outline" />
 ```
 
+`loading` and `disabled` are different: `disabled` removes the button from the tab order (native
+`disabled`), while `loading` keeps focus, sets `aria-busy`, and blocks activation.
+
+## Card
+
+```svelte
+<script lang="ts">
+	import { Button, Card } from 'sawitsvelte';
+</script>
+
+<Card.Root>
+	<Card.Header>
+		<Card.Title>Create project</Card.Title>
+		<Card.Description>Deploy your new project in one click.</Card.Description>
+	</Card.Header>
+	<Card.Content>
+		<p>Your project will be created in the selected region.</p>
+	</Card.Content>
+	<Card.Footer>
+		<Button>Deploy</Button>
+	</Card.Footer>
+</Card.Root>
+```
+
+Parts: `Root`, `Header`, `Title`, `Description`, `Content`, `Footer`. Every part is optional and
+accepts `class`; `Card.Title` takes `level` (1–6, default 3) so the heading fits your outline, and
+`Card.Root` takes `child` if the card should be an `<article>` or `<section>`.
+
+Parts are also importable by name from the subpath, which supports the namespace style:
+
+```svelte
+<script lang="ts">
+	import * as Card from 'sawitsvelte/card';
+</script>
+```
+
 ## Theme
 
 ```svelte

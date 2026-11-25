@@ -1,4 +1,4 @@
-import { twMerge } from 'tailwind-merge';
+import { twMerge } from 'tailwind-variants';
 
 export type ClassValue =
 	| string

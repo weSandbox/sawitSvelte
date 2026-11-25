@@ -1,10 +1,12 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { cn } from 'sawitsvelte';
 
 	let {
 		title,
 		code,
-		children
+		children,
+		previewClass = 'flex flex-wrap items-center gap-3'
 	}: {
 		/** Optional caption shown above the preview. */
 		title?: string;
@@ -12,6 +14,11 @@
 		code: string;
 		/** Live demo. Omit for a code-only block, e.g. showing a component's source. */
 		children?: Snippet;
+		/**
+		 * Layout of the demo area. Components that size to their content (buttons)
+		 * want a row; block-level ones (cards) want a constrained column.
+		 */
+		previewClass?: string;
 	} = $props();
 
 	let copied = $state(false);
@@ -38,7 +45,9 @@
 	{/if}
 
 	{#if children}
-		<div class="flex flex-wrap items-center gap-3 bg-card px-6 py-10">
+		<!-- `bg-background`, not `bg-card`: components that render a card surface must
+		     stand out from the canvas rather than blend into it. -->
+		<div class={cn('bg-background px-6 py-10', previewClass)}>
 			{@render children()}
 		</div>
 	{/if}

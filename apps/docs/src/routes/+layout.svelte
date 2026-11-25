@@ -2,9 +2,9 @@
 	import '../app.css';
 	import { ThemeProvider } from 'sawitsvelte';
 	import favicon from '#lib/assets/favicon.svg';
-	import ThemeToggle from '#lib/components/theme-toggle.svelte';
+	import SiteFooter from '#lib/components/site-footer.svelte';
+	import SiteHeader from '#lib/components/site-header.svelte';
 	import type { LayoutProps } from './$types';
-	import { resolve } from '$app/paths';
 
 	let { children }: LayoutProps = $props();
 </script>
@@ -14,25 +14,20 @@
 </svelte:head>
 
 <ThemeProvider defaultTheme="system">
-	<div class="min-h-dvh bg-background text-foreground">
-		<header
-			class="sticky top-0 z-[var(--sawit-z-sticky)] border-b border-border bg-background/80 backdrop-blur"
+	<div class="flex min-h-dvh flex-col bg-background text-foreground">
+		<a
+			href="#main"
+			class="sr-only rounded-md bg-background px-4 py-2 text-sm font-medium focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[var(--sawit-z-toast)] focus:border focus:border-border"
 		>
-			<div class="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-6">
-				<a href={resolve('/')} class="text-sm font-semibold tracking-tight">sawitSvelte</a>
-				<nav class="flex items-center gap-4">
-					<a
-						href={resolve('/components/button')}
-						class="text-sm text-muted-foreground transition-colors hover:text-foreground"
-					>
-						Button
-					</a>
-					<span class="hidden text-xs text-muted-foreground sm:inline">Phase 2</span>
-					<ThemeToggle />
-				</nav>
-			</div>
-		</header>
+			Skip to content
+		</a>
 
-		<main class="mx-auto w-full max-w-5xl px-6 py-10">{@render children()}</main>
+		<SiteHeader />
+
+		<main id="main" tabindex="-1" class="flex-1 outline-none">
+			{@render children()}
+		</main>
+
+		<SiteFooter />
 	</div>
 </ThemeProvider>

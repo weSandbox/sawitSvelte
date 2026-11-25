@@ -10,7 +10,7 @@ Scaffolded with Svelte 5.59, SvelteKit 3.4, Vite 8, Tailwind 4.3, TypeScript 6, 
 3. **Customizable** — every visual decision is a token; every structural decision accepts `class` and `child`.
 4. **Accessible** — platform semantics first, ARIA only where the platform has gaps.
 5. **Consistent** — semantic tokens only; components never reference hues or raw palette steps.
-6. **Lightweight** — two runtime dependencies, one of which is a class-merger.
+6. **Lightweight** — one direct runtime dependency; measured, not asserted (`pnpm size`).
 7. **Production-ready** — TypeScript strict, SSR-safe, tested in a real browser, measured.
 
 ## 1. Project structure
@@ -50,7 +50,7 @@ Notes:
 | Styling             | Tailwind v4, CSS-first                                                | The customization surface users already know; no CSS runtime                                                 | CSS Modules (opaque), CSS-in-JS (runtime cost)           |
 | Token transport     | CSS variables + `@theme inline`                                       | Utilities emit `var(--token)`, so themes switch at runtime                                                   | `@theme` without `inline` (bakes values, breaks theming) |
 | Variant composition | `tailwind-variants`                                                   | Slot-aware variants for multi-part components, one dependency                                                | `cva` (React-first), hand-rolled variants                |
-| Class merging       | `tailwind-merge`                                                      | Predictable overrides regardless of stylesheet order                                                         | Class-order concatenation (unpredictable)                |
+| Class merging       | `tailwind-merge`, imported through `tailwind-variants`                | Predictable overrides regardless of stylesheet order, without shipping two copies of it                      | Class-order concatenation (unpredictable)                |
 | Positioning         | `@floating-ui/dom` behind an own facade                               | Correct flip/shift/arrow/RTL is weeks of edge cases; facade allows a CSS anchor-positioning swap per browser | Hand-rolled engine                                       |
 | Overlays            | Platform-first (`<dialog>`, `popover`) + own focus/dismiss primitives | Top layer, background inertness, ESC and light-dismiss come from the browser                                 | Full custom overlay implementation                       |
 | Build               | `@sveltejs/package` → compiled JS + `.d.ts`                           | SSR-safe, predictable resolution, types for every consumer                                                   | Shipping raw source                                      |
@@ -225,29 +225,42 @@ pnpm build        # tokens, then sawitsvelte
 pnpm format
 ```
 
-- **Test pyramid:** pure logic in node (`src/**/*.test.ts`); components in a real Chromium via
-  Vitest browser mode (`tests/**/*.test.ts`, provider: Playwright against the system Chrome
-  `channel`, so no browser download is needed); Playwright for keyboard-only journeys, axe scans
-  per docs example, and visual snapshots (Phase 3).
-- **Why the split matters:** jsdom does not implement native button activation, `:focus-visible`,
-  or the disabled-element click rules, so tests of those behaviours would pass vacuously there.
+- **Test pyramid:** pure logic in node (`src/**/*.test.ts`); components and accessibility scans in a
+  real Chromium via Vitest browser mode (`tests/**/*.test.ts`, provider: Playwright against an
+  installed Chrome `channel` via `SAWIT_BROWSER_CHANNEL`, so no browser download is needed);
+  Playwright for keyboard-only journeys, per-example docs scans, and visual snapshots (Phase 3).
+- **Why the split matters:** jsdom does not implement native button activation, `:focus-visible`, or
+  the disabled-element click rules, so tests of those behaviours would pass vacuously there. It also
+  computes no layout, which is what axe's colour-contrast rule needs.
+- **Accessibility is automated, not aspirational.** `tests/setup/a11y.css` compiles the real design
+  system into the test page (tokens imported from source, so no build step is required), then axe
+  scans every state matrix in light and dark. Serious and critical violations fail the build.
+  Exactly one rule is disabled — `region`, a page-structure rule that a component fragment cannot
+  satisfy — and its justification lives next to the code. Meta-tests deliberately break a control to
+  prove the harness still detects failures.
 - **`mergeProps` is part of the contract** (ADR-0005): DOM handlers compose and honour
   `preventDefault()`; value callbacks replace; a consumer `undefined` never erases behaviour.
+- **`disabled` and `loading` are different states** (ADR-0007): `disabled` is native and removes the
+  control from the tab order; `loading` keeps focus and blocks activation with `aria-disabled` plus a
+  cancelled click.
 - **Definition of Done per component:** typed props → keyboard map → axe clean → browser tests
   → docs page with live examples and copy-source → `data-*` contract → changeset.
-- **CI:** install → build → check → test → docs build → format check.
-- **Size budgets are enforced, not aspirational:** Button < 2 KB gzip, Dialog < 8 KB,
-  positioning + ~5 KB.
+- **CI:** install → build → check → lint → test → size → docs build → format check.
+- **Size budgets are measured, not aspirational** (`pnpm size`). Current gzip: Button 21.2 kB,
+  Card 20.9 kB, both 21.8 kB, against 23–24 kB budgets. Our own component code is ~1.7 kB; the rest
+  is the shared styling runtime (`tailwind-merge` ~9.6 kB, `tailwind-variants` ~9.9 kB), paid once
+  regardless of component count. See `docs/technical-debt.md` #5 for the open question about that
+  runtime.
 
 ## 7. Roadmap
 
-| Phase                  | Deliverables                                                                                                                          | Gate                                                                             |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| 1 — Foundation ✅      | repo, tokens, bridge, `cn`, ThemeProvider, docs shell, CI, ADRs                                                                       | themed page in both themes; build, check and tests green                         |
-| 2 — Core components 🚧 | **Button ✅** (reference implementation, see ADR-0005), then Input, Label, Textarea, Checkbox, Switch, Badge, Avatar, Card, Separator | every component meets DoD; new components copy Button's contract                 |
-| 3 — Interactive        | behavior layer, then Dialog, Popover, Tooltip, Dropdown Menu, Tabs, Accordion, Select, Command                                        | keyboard-only pass on all overlays; primitives promoted to `packages/primitives` |
-| 4 — Advanced           | Calendar, Date Picker, Combobox, Data Table, Sidebar, Drawer, Charts                                                                  | date-math and chart-engine ADRs accepted; Data Table API frozen                  |
-| 5 — Distribution       | docs polish, search, customization guide, npm publish with provenance, icons                                                          | installable from a clean app in under two minutes                                |
+| Phase                  | Deliverables                                                                                                                               | Gate                                                                             |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| 1 — Foundation ✅      | repo, tokens, bridge, `cn`, ThemeProvider, docs shell, CI, ADRs                                                                            | themed page in both themes; build, check and tests green                         |
+| 2 — Core components 🚧 | **Button ✅** (ADR-0005), **Card ✅** (ADR-0006, first multipart), then Input, Label, Textarea, Checkbox, Switch, Badge, Avatar, Separator | every component meets DoD; new components copy Button's contract                 |
+| 3 — Interactive        | behavior layer, then Dialog, Popover, Tooltip, Dropdown Menu, Tabs, Accordion, Select, Command                                             | keyboard-only pass on all overlays; primitives promoted to `packages/primitives` |
+| 4 — Advanced           | Calendar, Date Picker, Combobox, Data Table, Sidebar, Drawer, Charts                                                                       | date-math and chart-engine ADRs accepted; Data Table API frozen                  |
+| 5 — Distribution       | docs polish, search, customization guide, npm publish with provenance, icons                                                               | installable from a clean app in under two minutes                                |
 
 Phase 3 is the risk concentration. The behavior layer is built and hardened before any of the
 eight overlay components, and each primitive ships with tests independent of its consumers.

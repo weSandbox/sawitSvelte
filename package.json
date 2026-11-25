@@ -12,6 +12,7 @@
 		"check": "pnpm -r check",
 		"lint": "eslint .",
 		"test": "pnpm -r test",
+		"size": "pnpm --filter sawitsvelte size",
 		"format": "prettier --write .",
 		"format:check": "prettier --check ."
 	},
