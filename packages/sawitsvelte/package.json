@@ -18,6 +18,11 @@
 			"svelte": "./dist/index.js",
 			"default": "./dist/index.js"
 		},
+		"./button": {
+			"types": "./dist/button/index.d.ts",
+			"svelte": "./dist/button/index.js",
+			"default": "./dist/button/index.js"
+		},
 		"./theme.css": "./dist/theme.css",
 		"./package.json": "./package.json"
 	},
@@ -34,12 +39,16 @@
 		"@sawitsvelte/tsconfig": "workspace:*",
 		"@sveltejs/package": "^3.0.3",
 		"@sveltejs/vite-plugin-svelte": "^7.3.2",
+		"@vitest/browser": "^5.1.1",
+		"@vitest/browser-playwright": "5.1.1",
+		"playwright": "^1.65.1",
 		"svelte": "^5.57.3",
 		"svelte-check": "^4.7.8",
 		"typescript": "^6.0.3",
 		"vitest": "^5.1.1"
 	},
 	"dependencies": {
-		"tailwind-merge": "^3.7.1"
+		"tailwind-merge": "^3.7.1",
+		"tailwind-variants": "^4.0.2"
 	}
 }

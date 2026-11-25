@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
+	import { buttonVariants } from 'sawitsvelte';
+
 	const paired = [
 		'primary',
 		'secondary',
@@ -44,7 +47,7 @@
 
 <div class="max-w-3xl">
 	<p class="text-xs font-medium tracking-widest text-muted-foreground uppercase">
-		Phase 1 — Foundation
+		Phase 2 — Button
 	</p>
 	<h1 class="mt-3 text-4xl font-semibold tracking-tight text-balance">
 		A design system that themes at runtime, not at build time.
@@ -57,6 +60,18 @@
 		<code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">data-theme</code> repaints the whole
 		framework without regenerating CSS.
 	</p>
+
+	<div class="mt-6 flex flex-wrap items-center gap-3">
+		<a href={resolve('/components/button')} class={buttonVariants({ size: 'lg' })}>
+			Explore Button
+		</a>
+		<a
+			href="https://github.com/weSandbox/sawitSvelte"
+			class={buttonVariants({ variant: 'outline', size: 'lg' })}
+		>
+			Source
+		</a>
+	</div>
 </div>
 
 <section class="mt-14">

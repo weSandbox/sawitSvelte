@@ -1,13 +1,41 @@
+import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
 	test: {
 		/*
-		 * Scoped to src/ on purpose: `dist` and `.svelte-kit/__package__` contain
-		 * compiled copies of the same tests, and Vitest's default glob finds them.
-		 * Component tests move to browser mode in Phase 2.
+		 * Two projects on purpose.
+		 *
+		 * `unit` runs pure logic in node. `browser` runs components in a real
+		 * Chromium, because jsdom does not implement native button activation,
+		 * focus behaviour or the CSS/attribute interactions these tests assert.
+		 *
+		 * The browser provider points at a system Chrome install (`channel`) so no
+		 * Playwright browser download is required.
 		 */
-		include: ['src/**/*.test.ts'],
-		environment: 'node'
+		projects: [
+			{
+				plugins: [svelte()],
+				test: {
+					name: 'unit',
+					include: ['src/**/*.test.ts'],
+					environment: 'node'
+				}
+			},
+			{
+				plugins: [svelte()],
+				test: {
+					name: 'browser',
+					include: ['tests/**/*.test.ts'],
+					browser: {
+						enabled: true,
+						headless: true,
+						provider: playwright({ launchOptions: { channel: 'chrome' } }),
+						instances: [{ browser: 'chromium' }]
+					}
+				}
+			}
+		]
 	}
 });

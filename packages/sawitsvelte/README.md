@@ -2,8 +2,9 @@
 
 A modern, accessible, customizable UI component framework built natively for Svelte 5.
 
-> **Pre-release.** Phase 1 (foundation) only: design tokens, runtime theming, and styling
-> utilities. Components arrive in Phase 2.
+> **Pre-release.** Foundation and the first component are shipped: design tokens, runtime
+> theming, styling utilities, and `Button`. More components follow per the roadmap in
+> `docs/architecture.md`.
 
 ## Install
 
@@ -16,6 +17,32 @@ pnpm add sawitsvelte
 @import 'tailwindcss';
 @import 'sawitsvelte/theme.css';
 @source '../node_modules/sawitsvelte/dist';
+```
+
+## Button
+
+```svelte
+<script lang="ts">
+	import { Button } from 'sawitsvelte';
+</script>
+
+<Button>Save changes</Button>
+<Button variant="outline" size="sm">Cancel</Button>
+<Button variant="destructive" loading>Deleting…</Button>
+```
+
+Variants: `default`, `secondary`, `outline`, `ghost`, `destructive`.
+Sizes: `sm`, `default`, `lg`, `icon`.
+
+Render a link instead of a button with the `child` snippet — Button hands you the merged
+attributes and withholds `type`/`disabled`, which are invalid outside form controls:
+
+```svelte
+{#snippet link({ props }: { props: ButtonChildProps })}
+	<a href="/docs" {...props}>Docs</a>
+{/snippet}
+
+<Button child={link} variant="outline" />
 ```
 
 ## Theme

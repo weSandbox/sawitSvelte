@@ -20,8 +20,14 @@
 		>
 			<div class="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-6">
 				<a href={resolve('/')} class="text-sm font-semibold tracking-tight">sawitSvelte</a>
-				<nav class="flex items-center gap-3">
-					<span class="hidden text-xs text-muted-foreground sm:inline">Phase 1 · Foundation</span>
+				<nav class="flex items-center gap-4">
+					<a
+						href={resolve('/components/button')}
+						class="text-sm text-muted-foreground transition-colors hover:text-foreground"
+					>
+						Button
+					</a>
+					<span class="hidden text-xs text-muted-foreground sm:inline">Phase 2</span>
 					<ThemeToggle />
 				</nav>
 			</div>

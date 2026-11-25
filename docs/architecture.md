@@ -225,8 +225,14 @@ pnpm build        # tokens, then sawitsvelte
 pnpm format
 ```
 
-- **Test pyramid:** pure logic in node; components in Vitest browser mode; Playwright for
-  keyboard-only journeys, axe scans per docs example, and visual snapshots.
+- **Test pyramid:** pure logic in node (`src/**/*.test.ts`); components in a real Chromium via
+  Vitest browser mode (`tests/**/*.test.ts`, provider: Playwright against the system Chrome
+  `channel`, so no browser download is needed); Playwright for keyboard-only journeys, axe scans
+  per docs example, and visual snapshots (Phase 3).
+- **Why the split matters:** jsdom does not implement native button activation, `:focus-visible`,
+  or the disabled-element click rules, so tests of those behaviours would pass vacuously there.
+- **`mergeProps` is part of the contract** (ADR-0005): DOM handlers compose and honour
+  `preventDefault()`; value callbacks replace; a consumer `undefined` never erases behaviour.
 - **Definition of Done per component:** typed props → keyboard map → axe clean → browser tests
   → docs page with live examples and copy-source → `data-*` contract → changeset.
 - **CI:** install → build → check → test → docs build → format check.
@@ -235,13 +241,13 @@ pnpm format
 
 ## 7. Roadmap
 
-| Phase               | Deliverables                                                                                                                  | Gate                                                                             |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| 1 — Foundation ✅   | repo, tokens, bridge, `cn`, ThemeProvider, docs shell, CI, ADRs                                                               | themed page in both themes; build, check and tests green                         |
-| 2 — Core components | Button, Input, Label, Textarea, Checkbox, Switch, Badge, Avatar, Card, Separator (+ `mergeProps`, `child` snippet, id helper) | every component meets DoD; Button is the reference implementation                |
-| 3 — Interactive     | behavior layer, then Dialog, Popover, Tooltip, Dropdown Menu, Tabs, Accordion, Select, Command                                | keyboard-only pass on all overlays; primitives promoted to `packages/primitives` |
-| 4 — Advanced        | Calendar, Date Picker, Combobox, Data Table, Sidebar, Drawer, Charts                                                          | date-math and chart-engine ADRs accepted; Data Table API frozen                  |
-| 5 — Distribution    | docs polish, search, customization guide, npm publish with provenance, icons                                                  | installable from a clean app in under two minutes                                |
+| Phase                  | Deliverables                                                                                                                          | Gate                                                                             |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| 1 — Foundation ✅      | repo, tokens, bridge, `cn`, ThemeProvider, docs shell, CI, ADRs                                                                       | themed page in both themes; build, check and tests green                         |
+| 2 — Core components 🚧 | **Button ✅** (reference implementation, see ADR-0005), then Input, Label, Textarea, Checkbox, Switch, Badge, Avatar, Card, Separator | every component meets DoD; new components copy Button's contract                 |
+| 3 — Interactive        | behavior layer, then Dialog, Popover, Tooltip, Dropdown Menu, Tabs, Accordion, Select, Command                                        | keyboard-only pass on all overlays; primitives promoted to `packages/primitives` |
+| 4 — Advanced           | Calendar, Date Picker, Combobox, Data Table, Sidebar, Drawer, Charts                                                                  | date-math and chart-engine ADRs accepted; Data Table API frozen                  |
+| 5 — Distribution       | docs polish, search, customization guide, npm publish with provenance, icons                                                          | installable from a clean app in under two minutes                                |
 
 Phase 3 is the risk concentration. The behavior layer is built and hardened before any of the
 eight overlay components, and each primitive ships with tests independent of its consumers.
