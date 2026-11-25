@@ -11,11 +11,16 @@
 		onNavigate?: () => void;
 	} = $props();
 
-	const currentPath = $derived(page.url.pathname);
+	/*
+	 * Active state comes from the route id, not the URL pathname: the pathname
+	 * carries `paths.base` (`/sawitSvelte/docs` on GitHub Pages) while route ids
+	 * stay base-independent (`/docs`), so this comparison works at any base.
+	 */
+	const currentRoute = $derived(page.route.id ?? '');
 
 	function isActive(href: string): boolean {
-		if (href === '/') return currentPath === '/' || currentPath === '';
-		return currentPath === href || currentPath.startsWith(`${href}/`);
+		if (href === '/') return currentRoute === '/';
+		return currentRoute === href || currentRoute.startsWith(`${href}/`);
 	}
 
 	const linkClass: Record<'desktop' | 'mobile', string> = {
