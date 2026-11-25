@@ -167,9 +167,24 @@ the literal value at build time and runtime theming silently stops working.
 custom themes (`data-theme="ocean"`) are a hard requirement; a `@custom-variant dark` maps the
 dark palette onto Tailwind's familiar `dark:` prefix.
 
-**Both themes are tuned, not inverted.** Dark mode moves accent tokens to their lighter 400
-step and pairs them with a dark foreground, and raises shadow alpha, because a straight
-inversion produces washed-out accents and invisible elevation.
+**Both themes are tuned, not inverted.** Dark mode uses a green-tinted charcoal ramp for surfaces and
+keeps the lime accent bright, pairing it with a near-black foreground; a straight inversion produces
+washed-out accents and invisible elevation.
+
+### Visual language (ADR-0008)
+
+- **Silhouette.** Action surfaces are clipped at 45°, not rounded: `--sawit-bevel` on three corners
+  and a deeper `--sawit-notch` on the fourth. Size variants override both, so the cut stays
+  proportional. `shape-notch-br` is a standalone utility, not a component internal.
+- **Measured constraint.** `clip-path` clips `box-shadow` _and_ `drop-shadow`, and
+  `polygon(... round)` is unsupported. Shaped elements therefore cannot cast an outer shadow, so
+  buttons use an inset edge plus a 2px lift/press, and **cards are deliberately not clipped** — they
+  keep a 16px radius and real elevation, carrying the signature with a `corner-accent` bracket.
+- **Surfaces and accent.** `--surface-1/2/3` are the source; `--card`, `--popover`, `--secondary`
+  and `--muted` alias them. Lime is confined to the primary fill, the focus ring and the card
+  bracket; `--accent-soft` is the translucent hover wash.
+- **Theming scope.** Light values are declared on `[data-theme='light']` as well as `:root`, so a
+  nested light panel inside a dark page re-declares the palette for its subtree.
 
 **Installation contract is three lines:**
 

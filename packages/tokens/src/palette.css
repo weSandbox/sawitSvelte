@@ -3,14 +3,14 @@
  *
  * Raw scales. Components never read these directly; they exist so semantic
  * tokens have somewhere to point, and so a custom theme can re-hue the whole
- * framework by overriding these eleven values instead of touching component code.
+ * framework by overriding these values instead of touching component code.
  *
  * Swapping the `primary` ramp is the single highest-leverage rebrand: every
  * focus ring, button, link and selected state follows it.
  */
 
 :root {
-	/* Neutral — structural greys for surfaces, borders and text. */
+	/* Neutral — structural greys for light surfaces, borders and text. */
 	--sawit-neutral-50: oklch(0.985 0 0);
 	--sawit-neutral-100: oklch(0.967 0.001 286.375);
 	--sawit-neutral-200: oklch(0.92 0.004 286.32);
@@ -23,16 +23,27 @@
 	--sawit-neutral-900: oklch(0.21 0.006 285.885);
 	--sawit-neutral-950: oklch(0.141 0.005 285.823);
 
-	/* Primary — the accent hue. */
-	--sawit-primary-50: oklch(0.97 0.014 254.604);
-	--sawit-primary-100: oklch(0.932 0.032 255.585);
-	--sawit-primary-200: oklch(0.882 0.059 254.128);
-	--sawit-primary-300: oklch(0.809 0.105 251.813);
-	--sawit-primary-400: oklch(0.707 0.165 254.624);
-	--sawit-primary-500: oklch(0.623 0.214 259.815);
-	--sawit-primary-600: oklch(0.546 0.245 262.881);
-	--sawit-primary-700: oklch(0.488 0.243 264.376);
-	--sawit-primary-800: oklch(0.424 0.199 265.638);
-	--sawit-primary-900: oklch(0.379 0.146 265.522);
-	--sawit-primary-950: oklch(0.282 0.091 267.935);
+	/*
+	 * Charcoal — the dark surface family. It carries a faint green cast rather
+	 * than being a pure grey, so the lime accent belongs to it instead of
+	 * sitting on top of it.
+	 */
+	--sawit-charcoal-700: oklch(0.345 0.013 145);
+	--sawit-charcoal-800: oklch(0.275 0.012 145);
+	--sawit-charcoal-850: oklch(0.235 0.011 145);
+	--sawit-charcoal-900: oklch(0.196 0.01 145);
+	--sawit-charcoal-950: oklch(0.155 0.008 145);
+
+	/* Primary — lime. The signature hue. */
+	--sawit-primary-50: oklch(0.986 0.031 120.757);
+	--sawit-primary-100: oklch(0.967 0.067 122.328);
+	--sawit-primary-200: oklch(0.938 0.127 124.321);
+	--sawit-primary-300: oklch(0.897 0.196 126.665);
+	--sawit-primary-400: oklch(0.841 0.238 128.85);
+	--sawit-primary-500: oklch(0.768 0.233 130.85);
+	--sawit-primary-600: oklch(0.648 0.2 131.684);
+	--sawit-primary-700: oklch(0.532 0.157 131.589);
+	--sawit-primary-800: oklch(0.453 0.124 130.933);
+	--sawit-primary-900: oklch(0.405 0.101 131.063);
+	--sawit-primary-950: oklch(0.274 0.072 132.109);
 }

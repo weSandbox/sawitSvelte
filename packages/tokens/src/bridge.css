@@ -14,6 +14,10 @@
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
 
+	--color-surface-1: var(--surface-1);
+	--color-surface-2: var(--surface-2);
+	--color-surface-3: var(--surface-3);
+
 	--color-card: var(--card);
 	--color-card-foreground: var(--card-foreground);
 
@@ -21,6 +25,8 @@
 	--color-popover-foreground: var(--popover-foreground);
 
 	--color-primary: var(--primary);
+	--color-primary-hover: var(--primary-hover);
+	--color-primary-active: var(--primary-active);
 	--color-primary-foreground: var(--primary-foreground);
 
 	--color-secondary: var(--secondary);
@@ -31,6 +37,8 @@
 
 	--color-accent: var(--accent);
 	--color-accent-foreground: var(--accent-foreground);
+	--color-accent-soft: var(--accent-soft);
+	--color-accent-soft-foreground: var(--accent-soft-foreground);
 
 	--color-destructive: var(--destructive);
 	--color-destructive-foreground: var(--destructive-foreground);
@@ -42,6 +50,8 @@
 	--color-info-foreground: var(--info-foreground);
 
 	--color-border: var(--border);
+	--color-border-strong: var(--border-strong);
+	--color-border-accent: var(--border-accent);
 	--color-input: var(--input);
 	--color-ring: var(--ring);
 
@@ -73,9 +83,12 @@
 	--shadow-md: var(--sawit-shadow-md);
 	--shadow-lg: var(--sawit-shadow-lg);
 	--shadow-xl: var(--sawit-shadow-xl);
+	--shadow-card: var(--sawit-shadow-card);
+	--shadow-glow: var(--sawit-shadow-glow);
 
 	--ease-standard: var(--sawit-ease-standard);
 	--ease-emphasized: var(--sawit-ease-emphasized);
+	--ease-tactile: var(--sawit-ease-tactile);
 }
 
 /*
@@ -83,3 +96,37 @@
  * so both custom themes and the familiar `dark:` prefix work.
  */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/*
+ * Signature shape. Exposed as a utility rather than a component-internal class so
+ * a consumer can cut any element they like — a nav item, an avatar frame, a hero
+ * panel — and stay inside the system.
+ *
+ * The notch size is read from `--sawit-notch`, so a component can vary it per
+ * size with an arbitrary property (`[--sawit-notch:10px]`) and the silhouette
+ * follows.
+ */
+@utility shape-notch-br {
+	clip-path: var(--sawit-shape-notch-br);
+}
+
+/*
+ * Corner accent bracket. Uses logical properties so it mirrors correctly in RTL,
+ * and sits inside the corner radius so it reads as a bracket rather than a border.
+ */
+@utility corner-accent {
+	position: relative;
+
+	&::after {
+		content: '';
+		position: absolute;
+		inset-block-start: 0.7rem;
+		inset-inline-end: 0.7rem;
+		inline-size: 1.15rem;
+		block-size: 1.15rem;
+		border-block-start: 1px solid var(--border-accent);
+		border-inline-end: 1px solid var(--border-accent);
+		border-start-end-radius: 0.45rem;
+		pointer-events: none;
+	}
+}

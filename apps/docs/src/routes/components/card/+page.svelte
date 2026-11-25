@@ -62,6 +62,13 @@ ${close}`;
 
 <Card.Root child={article} />`;
 
+	const featuredCode = `<Card.Root featured>
+	<Card.Header>
+		<Card.Title>Featured</Card.Title>
+		<Card.Description>Accent border, accent bloom, brighter corner bracket.</Card.Description>
+	</Card.Header>
+</Card.Root>`;
+
 	const partRows = [
 		{
 			name: 'Card.Root',
@@ -121,6 +128,12 @@ ${close}`;
 			description: '`Card.Title` only. Chooses the heading element.'
 		},
 		{
+			name: 'featured',
+			type: 'boolean',
+			default: 'false',
+			description: '`Card.Root` only. Accent border, accent bloom and a brighter corner bracket.'
+		},
+		{
 			name: 'child',
 			type: 'Snippet<[{ props: CardChildProps }]>',
 			default: '—',
@@ -140,6 +153,11 @@ ${close}`;
 			values: '"card" | "card-header" | …',
 			description:
 				'One per part: card, card-header, card-title, card-description, card-content, card-footer.'
+		},
+		{
+			name: 'data-featured',
+			values: 'present / absent',
+			description: 'Present on Root when `featured` is set.'
 		}
 	];
 </script>
@@ -220,6 +238,33 @@ ${close}`;
 				<Button>Upgrade</Button>
 				<Button variant="outline">Cancel plan</Button>
 			</Card.Footer>
+		</Card.Root>
+	</Example>
+</section>
+
+<section class="mt-12">
+	<h2 class="text-lg font-semibold tracking-tight">Surface and accent</h2>
+	<p class="mt-1 max-w-2xl text-sm text-muted-foreground">
+		Card is the counterpoint to Button. The button is cut; the card is not. A surface needs real
+		elevation more than it needs a silhouette change, and clipping would remove the shadow entirely,
+		so the signature lives in the corner bracket and the layered surface instead.
+	</p>
+	<Example
+		title="Default and featured"
+		code={featuredCode}
+		previewClass="grid w-full gap-4 sm:grid-cols-2"
+	>
+		<Card.Root>
+			<Card.Header>
+				<Card.Title>Default</Card.Title>
+				<Card.Description>Surface one, hairline border, soft elevation.</Card.Description>
+			</Card.Header>
+		</Card.Root>
+		<Card.Root featured>
+			<Card.Header>
+				<Card.Title>Featured</Card.Title>
+				<Card.Description>Accent border, accent bloom, brighter bracket.</Card.Description>
+			</Card.Header>
 		</Card.Root>
 	</Example>
 </section>

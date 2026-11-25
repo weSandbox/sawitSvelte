@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { Button, type ButtonChildProps } from 'sawitsvelte';
+	import { Button, buttonVariants, cn, type ButtonChildProps } from 'sawitsvelte';
 	import DataAttributesTable from '#lib/components/docs/data-attributes-table.svelte';
 	import Example from '#lib/components/docs/example.svelte';
 	import PropsTable from '#lib/components/docs/props-table.svelte';
+	import ThemePreview from '#lib/components/docs/theme-preview.svelte';
 
 	// Imported as raw text so the published source is the copy-paste surface.
 	import buttonSource from '../../../../../../packages/sawitsvelte/src/lib/button/button.svelte?raw';
@@ -53,6 +54,25 @@ ${close}`;
 <Button child={link} variant="outline" />`;
 
 	const classNameCode = `<Button class="bg-red-600 text-white hover:bg-red-700">Custom</Button>`;
+
+	const shapeCode = `/* the silhouette is a token, not a hardcoded clip */
+--sawit-shape-notch-br: polygon(
+	0 var(--sawit-bevel), var(--sawit-bevel) 0,
+	calc(100% - var(--sawit-bevel)) 0, 100% var(--sawit-bevel),
+	100% calc(100% - var(--sawit-notch)),
+	calc(100% - var(--sawit-notch)) 100%,
+	var(--sawit-bevel) 100%, 0 calc(100% - var(--sawit-bevel))
+);
+
+/* any element can join the family */
+<nav class="shape-notch-br bg-surface-2 px-4 py-2">…</nav>`;
+
+	/** Hover and active are shown as static swatches; the classes are the real ones. */
+	const stateColumns = [
+		{ label: 'Rest', extra: '' },
+		{ label: 'Hover', extra: 'bg-primary-hover -translate-y-0.5' },
+		{ label: 'Active', extra: 'bg-primary-active' }
+	];
 
 	const propRows = [
 		{
@@ -159,6 +179,18 @@ ${close}`;
 	<a href="https://svelte.dev" {...props}>Disabled link</a>
 {/snippet}
 
+{#snippet arrow()}
+	<svg class="size-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+		<path
+			d="M7 17 17 7M9 7h8v8"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		/>
+	</svg>
+{/snippet}
+
 <svelte:head>
 	<title>Button — sawitSvelte</title>
 	<meta
@@ -176,6 +208,54 @@ ${close}`;
 		of a string tag.
 	</p>
 </div>
+
+<section class="mt-12">
+	<h2 class="text-lg font-semibold tracking-tight">Visual language</h2>
+	<p class="mt-1 max-w-2xl text-sm text-muted-foreground">
+		The silhouette carries the identity before the colour does. Three corners are cut at 45° and the
+		fourth is cut deeper, so the shape is recognisable in a screenshot with the colour removed.
+	</p>
+
+	<dl class="mt-6 grid gap-6 sm:grid-cols-3">
+		<div>
+			<dt class="text-sm font-semibold">The cut</dt>
+			<dd class="mt-1 text-sm text-muted-foreground">
+				Both cut sizes are tokens. Each size variant overrides
+				<code class="font-mono text-xs">--sawit-notch</code>, so the deep cut stays proportional
+				instead of shrinking with the label.
+			</dd>
+		</div>
+		<div>
+			<dt class="text-sm font-semibold">The accent</dt>
+			<dd class="mt-1 text-sm text-muted-foreground">
+				Lime is confined to the primary fill, the focus ring, and the card edge. Body text stays
+				charcoal, so the accent reads as an accent rather than a theme.
+			</dd>
+		</div>
+		<div>
+			<dt class="text-sm font-semibold">The touch</dt>
+			<dd class="mt-1 text-sm text-muted-foreground">
+				Hover lifts 2px and brightens; press returns to the surface and darkens. Icons lean 2px into
+				the cut. All of it collapses under
+				<code class="font-mono text-xs">prefers-reduced-motion</code>.
+			</dd>
+		</div>
+	</dl>
+
+	<ThemePreview
+		note="The same markup in both themes. Dark is the identity; light is an adaptation, not an inversion."
+	>
+		<Button>Get started {@render arrow()}</Button>
+		<Button variant="outline">Explore docs</Button>
+		<Button variant="ghost">Learn more</Button>
+	</ThemePreview>
+
+	<Example title="Reuse the shape anywhere" code={shapeCode}>
+		<nav class="border border-border bg-surface-2 px-4 py-2 text-sm shape-notch-br">
+			Any element can take the cut
+		</nav>
+	</Example>
+</section>
 
 <section class="mt-12">
 	<h2 class="text-lg font-semibold tracking-tight">Usage</h2>
@@ -206,8 +286,9 @@ ${close}`;
 <section class="mt-12">
 	<h2 class="text-lg font-semibold tracking-tight">Sizes</h2>
 	<p class="mt-1 text-sm text-muted-foreground">
-		Heights come from the spacing scale, and <code class="font-mono text-xs">icon</code> is a square
-		for toolbar use. Pair it with an <code class="font-mono text-xs">aria-label</code>.
+		Heights are 36 / 44 / 48px, and <code class="font-mono text-xs">icon</code> is a 44px square for
+		toolbar use — pair it with an <code class="font-mono text-xs">aria-label</code>. The cut scales
+		with the size, so a small button does not lose its silhouette.
 	</p>
 	<Example code={sizesCode}>
 		<Button size="sm">Small</Button>
@@ -245,6 +326,18 @@ ${close}`;
 		<code class="font-mono text-xs">aria-busy</code>, disables activation, and keeps the label so
 		the accessible name never disappears.
 	</p>
+
+	<!-- Static swatches of the real classes; hover/active cannot be triggered in a screenshot. -->
+	<div class="mt-6 grid gap-4 sm:grid-cols-3">
+		{#each stateColumns as column (column.label)}
+			<div class="flex flex-col gap-2">
+				<span class="text-[11px] font-medium tracking-widest text-muted-foreground uppercase">
+					{column.label}
+				</span>
+				<div class={cn(buttonVariants(), column.extra)} aria-hidden="true">Get started</div>
+			</div>
+		{/each}
+	</div>
 	<Example title="Loading" code={loadingCode}>
 		<Button loading>Saving…</Button>
 		<Button loading variant="outline">Please wait</Button>

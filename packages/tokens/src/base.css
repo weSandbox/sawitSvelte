@@ -29,8 +29,8 @@
 	}
 
 	:focus-visible {
-		outline: 2px solid var(--ring);
-		outline-offset: 2px;
+		outline: var(--sawit-ring-width) solid var(--ring);
+		outline-offset: var(--sawit-ring-offset);
 	}
 
 	[hidden] {
@@ -53,8 +53,21 @@
 	}
 }
 
-/* Windows High Contrast / forced colours: keep focus visible when shadows die. */
+/*
+ * Windows High Contrast / forced colours.
+ *
+ * The cut corner is decorative: under forced colours the system replaces our
+ * fills and borders anyway, so the clip is dropped rather than fighting the
+ * user's palette. Focus keeps a system-coloured outline when shadows die.
+ *
+ * These rules sit outside `@layer base` on purpose — a user-agent override has
+ * to outrank the utility that applies the clip.
+ */
 @media (forced-colors: active) {
+	.shape-notch-br {
+		clip-path: none;
+	}
+
 	:focus-visible {
 		outline: 2px solid CanvasText;
 	}

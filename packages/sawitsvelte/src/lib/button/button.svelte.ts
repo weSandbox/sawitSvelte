@@ -8,29 +8,58 @@ import type { ClassValue } from '../internal/cn.js';
  * imported without mounting a component — `buttonVariants()` is the supported
  * way to dress a link or any other element with button styling.
  *
- * Every colour here is a semantic token. Components never reference a hue or a
- * raw palette step, so retheming never requires touching this file.
+ * The silhouette is the identity: three corners cut at 45° and one cut larger,
+ * read from `--sawit-notch`. Sizes override that variable, so the cut scales
+ * with the control without a second shape definition.
+ *
+ * Depth cannot come from an outer shadow here. `clip-path` clips `box-shadow`
+ * and `drop-shadow` alike, so elevation is expressed as an inner edge highlight
+ * plus a 2px lift and a tonal shift. That is a measured constraint, not a
+ * preference — see docs/adr/0008-visual-identity.md.
  */
 export const buttonVariants = tv({
 	base: [
-		'inline-flex shrink-0 items-center justify-center gap-2 rounded-md font-medium whitespace-nowrap select-none',
-		'transition-colors duration-[var(--sawit-duration-fast)] ease-[var(--sawit-ease-standard)]',
-		'disabled:pointer-events-none disabled:opacity-50 aria-disabled:opacity-50',
-		'[&_svg]:pointer-events-none [&_svg]:shrink-0'
+		'relative inline-flex shrink-0 items-center justify-center gap-2 font-medium tracking-tight whitespace-nowrap select-none',
+		'shape-notch-br',
+		'transition-[background-color,color,border-color,translate] duration-[var(--sawit-duration-fast)] ease-[var(--sawit-ease-tactile)]',
+		'motion-reduce:transition-none',
+		'disabled:opacity-45 aria-disabled:opacity-45',
+		'[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:transition-transform [&_svg]:duration-[var(--sawit-duration-fast)] [&_svg]:ease-[var(--sawit-ease-tactile)]',
+		// Signature micro-interaction: the icon leans in the direction of the cut.
+		'hover:[&_svg]:translate-x-0.5 hover:[&_svg]:-translate-y-0.5',
+		'motion-reduce:hover:[&_svg]:translate-x-0 motion-reduce:hover:[&_svg]:-translate-y-0'
 	],
 	variants: {
 		variant: {
-			default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-			secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-			outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-			ghost: 'hover:bg-accent hover:text-accent-foreground',
-			destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
+			default: [
+				'bg-primary text-primary-foreground shadow-[var(--sawit-edge)]',
+				'hover:bg-primary-hover hover:-translate-y-0.5',
+				'active:bg-primary-active active:translate-y-0'
+			],
+			secondary: [
+				'border border-border bg-secondary text-secondary-foreground',
+				'hover:border-border-strong hover:bg-surface-3'
+			],
+			outline: [
+				'border border-border-strong bg-transparent text-foreground',
+				'hover:border-border-accent hover:bg-accent-soft hover:text-accent-soft-foreground'
+			],
+			ghost: [
+				'bg-transparent text-foreground',
+				'hover:bg-accent-soft hover:text-accent-soft-foreground'
+			],
+			destructive: [
+				'bg-destructive text-destructive-foreground shadow-[var(--sawit-edge)]',
+				'hover:opacity-90 hover:-translate-y-0.5',
+				'active:translate-y-0 active:opacity-100'
+			]
 		},
 		size: {
-			sm: 'h-8 gap-1.5 px-3 text-xs',
-			default: 'h-9 px-4 text-sm',
-			lg: 'h-10 px-6 text-base',
-			icon: 'size-9'
+			// The notch and bevel shrink with the control so the cut never eats the label.
+			sm: 'h-9 gap-1.5 px-4 text-xs [--sawit-notch:12px] [--sawit-bevel:5px]',
+			default: 'h-11 px-5 text-sm [--sawit-notch:18px]',
+			lg: 'h-12 px-6 text-base [--sawit-notch:20px]',
+			icon: 'size-11 [--sawit-notch:14px]'
 		},
 		fullWidth: {
 			true: 'w-full'

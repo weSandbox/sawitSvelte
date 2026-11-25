@@ -10,50 +10,66 @@
  *     Colour tokens stay short because Tailwind's colour namespace is `--color-*`.
  */
 
-:root {
+:root,
+[data-theme='light'] {
 	color-scheme: light;
+
+	/* Layered surfaces. Elevation is expressed by lightness, not only by shadow. */
+	--surface-1: oklch(1 0 0);
+	--surface-2: oklch(1 0 0);
+	--surface-3: var(--sawit-neutral-100);
 
 	--background: var(--sawit-neutral-50);
 	--foreground: var(--sawit-neutral-950);
 
-	--card: oklch(1 0 0);
+	--card: var(--surface-1);
 	--card-foreground: var(--foreground);
 
-	--popover: oklch(1 0 0);
+	--popover: var(--surface-2);
 	--popover-foreground: var(--foreground);
 
-	--primary: var(--sawit-primary-600);
-	--primary-foreground: var(--sawit-primary-50);
+	--primary: var(--sawit-primary-400);
+	--primary-hover: var(--sawit-primary-500);
+	--primary-active: var(--sawit-primary-600);
+	--primary-foreground: var(--sawit-charcoal-950);
 
-	--secondary: var(--sawit-neutral-100);
-	--secondary-foreground: var(--sawit-neutral-900);
+	--secondary: var(--surface-3);
+	--secondary-foreground: var(--foreground);
 
-	--muted: var(--sawit-neutral-100);
+	--muted: var(--surface-3);
 	--muted-foreground: var(--sawit-neutral-500);
 
-	--accent: var(--sawit-neutral-100);
-	--accent-foreground: var(--sawit-neutral-900);
+	--accent: var(--surface-3);
+	--accent-foreground: var(--foreground);
+
+	/* A wash, not a surface: used for ghost/hover states over any backdrop. */
+	--accent-soft: oklch(0.841 0.238 128.85 / 0.18);
+	--accent-soft-foreground: var(--sawit-primary-900);
 
 	--destructive: oklch(0.577 0.245 27.325);
 	--destructive-foreground: oklch(0.985 0 0);
 	--success: oklch(0.596 0.145 163.225);
 	--success-foreground: oklch(0.985 0 0);
 	--warning: oklch(0.769 0.166 70.08);
-	--warning-foreground: oklch(0.205 0.006 285.885);
+	--warning-foreground: var(--sawit-charcoal-950);
 	--info: oklch(0.623 0.214 259.815);
 	--info-foreground: oklch(0.985 0 0);
 
 	--border: var(--sawit-neutral-200);
+	/* 3:1 against the page, because an outline control's border is its only affordance
+	   (WCAG 1.4.11). `--border` stays subtle for decorative separators. */
+	--border-strong: var(--sawit-neutral-500);
+	--border-accent: oklch(0.648 0.2 131.684 / 0.55);
 	--input: var(--sawit-neutral-200);
-	--ring: var(--sawit-primary-600);
+	--ring: var(--sawit-primary-700);
 
-	--chart-1: oklch(0.623 0.214 259.815);
-	--chart-2: oklch(0.596 0.145 163.225);
+	--chart-1: oklch(0.648 0.2 131.684);
+	--chart-2: oklch(0.6 0.118 184.704);
 	--chart-3: oklch(0.769 0.166 70.08);
 	--chart-4: oklch(0.577 0.245 27.325);
 	--chart-5: oklch(0.541 0.199 303.9);
 
-	--sidebar: var(--sawit-neutral-50);
+	--sidebar: var(--surface-1);
 	--sidebar-foreground: var(--foreground);
 	--sidebar-primary: var(--primary);
 	--sidebar-primary-foreground: var(--primary-foreground);
@@ -63,11 +79,29 @@
 	--sidebar-ring: var(--ring);
 
 	/* Shape, type, elevation, motion and layering — theme-independent. */
-	--sawit-radius: 0.625rem;
+	--sawit-radius: 0.75rem;
 	--sawit-radius-sm: calc(var(--sawit-radius) - 4px);
 	--sawit-radius-md: calc(var(--sawit-radius) - 2px);
 	--sawit-radius-lg: var(--sawit-radius);
 	--sawit-radius-xl: calc(var(--sawit-radius) + 4px);
+
+	/*
+	 * Signature silhouette. Corners are cut at 45° rather than rounded: three small
+	 * cuts soften the box, one large cut identifies the component. Both are tokens,
+	 * so a theme can dial the character up or down without touching a component.
+	 */
+	--sawit-notch: 14px;
+	--sawit-bevel: 6px;
+	--sawit-shape-notch-br: polygon(
+		0 var(--sawit-bevel),
+		var(--sawit-bevel) 0,
+		calc(100% - var(--sawit-bevel)) 0,
+		100% var(--sawit-bevel),
+		100% calc(100% - var(--sawit-notch)),
+		calc(100% - var(--sawit-notch)) 100%,
+		var(--sawit-bevel) 100%,
+		0 calc(100% - var(--sawit-bevel))
+	);
 
 	--sawit-font-sans:
 		ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -80,11 +114,26 @@
 	--sawit-shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.1), 0 4px 6px -4px oklch(0 0 0 / 0.1);
 	--sawit-shadow-xl: 0 20px 25px -5px oklch(0 0 0 / 0.1), 0 8px 10px -6px oklch(0 0 0 / 0.1);
 
+	/* Elevation for surfaces (cards) and the accent bloom for featured ones. */
+	--sawit-shadow-card: 0 1px 2px 0 oklch(0 0 0 / 0.06), 0 16px 40px -30px oklch(0 0 0 / 0.45);
+	--sawit-shadow-glow:
+		0 0 0 1px var(--border-accent), 0 22px 60px -30px oklch(0.648 0.2 131.684 / 0.5);
+
+	/* Inner edge for clipped silhouettes: an outer box-shadow would be clipped away. */
+	--sawit-edge-highlight: inset 0 1px 0 oklch(1 0 0 / 0.28);
+	--sawit-edge-shade: inset 0 -1px 0 oklch(0 0 0 / 0.22);
+	--sawit-edge: var(--sawit-edge-highlight), var(--sawit-edge-shade);
+
 	--sawit-duration-fast: 120ms;
 	--sawit-duration-base: 180ms;
 	--sawit-duration-slow: 280ms;
 	--sawit-ease-standard: cubic-bezier(0.2, 0, 0, 1);
 	--sawit-ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+	/* Slight overshoot, for lifts that should feel physical rather than mechanical. */
+	--sawit-ease-tactile: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+	--sawit-ring-width: 2px;
+	--sawit-ring-offset: 2px;
 
 	/* One documented stacking order, so overlays never fight each other. */
 	--sawit-z-dropdown: 1000;
@@ -97,53 +146,65 @@
 }
 
 /*
- * Dark theme. Accent tokens move to their lighter 400 step and take a dark
- * foreground, which keeps contrast high instead of washing accents out.
+ * Dark theme. Charcoal surfaces with the lime accent kept bright; foregrounds on
+ * accent tokens stay near-black so contrast is high rather than washed out.
  */
 [data-theme='dark'] {
 	color-scheme: dark;
 
-	--background: var(--sawit-neutral-950);
+	--surface-1: var(--sawit-charcoal-900);
+	--surface-2: var(--sawit-charcoal-850);
+	--surface-3: var(--sawit-charcoal-800);
+
+	--background: var(--sawit-charcoal-950);
 	--foreground: var(--sawit-neutral-50);
 
-	--card: var(--sawit-neutral-900);
+	--card: var(--surface-1);
 	--card-foreground: var(--foreground);
 
-	--popover: var(--sawit-neutral-900);
+	--popover: var(--surface-2);
 	--popover-foreground: var(--foreground);
 
 	--primary: var(--sawit-primary-400);
-	--primary-foreground: var(--sawit-neutral-950);
+	--primary-hover: var(--sawit-primary-300);
+	--primary-active: var(--sawit-primary-500);
+	--primary-foreground: var(--sawit-charcoal-950);
 
-	--secondary: var(--sawit-neutral-800);
-	--secondary-foreground: var(--sawit-neutral-100);
+	--secondary: var(--surface-2);
+	--secondary-foreground: var(--foreground);
 
-	--muted: var(--sawit-neutral-800);
+	--muted: var(--surface-3);
 	--muted-foreground: var(--sawit-neutral-400);
 
-	--accent: var(--sawit-neutral-800);
-	--accent-foreground: var(--sawit-neutral-100);
+	--accent: var(--surface-3);
+	--accent-foreground: var(--foreground);
+
+	--accent-soft: oklch(0.841 0.238 128.85 / 0.14);
+	--accent-soft-foreground: var(--sawit-primary-300);
 
 	--destructive: oklch(0.704 0.191 22.216);
-	--destructive-foreground: var(--sawit-neutral-950);
+	--destructive-foreground: var(--sawit-charcoal-950);
 	--success: oklch(0.765 0.177 163.223);
-	--success-foreground: var(--sawit-neutral-950);
+	--success-foreground: var(--sawit-charcoal-950);
 	--warning: oklch(0.828 0.189 84.429);
-	--warning-foreground: var(--sawit-neutral-950);
+	--warning-foreground: var(--sawit-charcoal-950);
 	--info: oklch(0.707 0.165 254.624);
-	--info-foreground: var(--sawit-neutral-950);
+	--info-foreground: var(--sawit-charcoal-950);
 
-	--border: oklch(1 0 0 / 12%);
-	--input: oklch(1 0 0 / 16%);
-	--ring: var(--sawit-primary-500);
+	--border: oklch(1 0 0 / 0.1);
+	/* Same 3:1 rule as light mode; 18% white over charcoal did not reach it. */
+	--border-strong: oklch(1 0 0 / 0.34);
+	--border-accent: oklch(0.841 0.238 128.85 / 0.45);
+	--input: oklch(1 0 0 / 0.14);
+	--ring: var(--sawit-primary-400);
 
-	--chart-1: oklch(0.707 0.165 254.624);
-	--chart-2: oklch(0.765 0.177 163.223);
+	--chart-1: oklch(0.841 0.238 128.85);
+	--chart-2: oklch(0.777 0.152 181.912);
 	--chart-3: oklch(0.828 0.189 84.429);
 	--chart-4: oklch(0.704 0.191 22.216);
 	--chart-5: oklch(0.68 0.178 304.47);
 
-	--sidebar: var(--sawit-neutral-900);
+	--sidebar: var(--surface-1);
 	--sidebar-foreground: var(--foreground);
 	--sidebar-primary: var(--primary);
 	--sidebar-primary-foreground: var(--primary-foreground);
@@ -152,10 +213,18 @@
 	--sidebar-border: var(--border);
 	--sidebar-ring: var(--ring);
 
-	/* Elevation reads as shadow on dark surfaces only if the alpha is stronger. */
+	/* Elevation reads on dark surfaces only with stronger alpha. */
 	--sawit-shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 0.4);
 	--sawit-shadow-sm: 0 1px 3px 0 oklch(0 0 0 / 0.5), 0 1px 2px -1px oklch(0 0 0 / 0.5);
 	--sawit-shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.5), 0 2px 4px -2px oklch(0 0 0 / 0.5);
 	--sawit-shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.5), 0 4px 6px -4px oklch(0 0 0 / 0.5);
 	--sawit-shadow-xl: 0 20px 25px -5px oklch(0 0 0 / 0.5), 0 8px 10px -6px oklch(0 0 0 / 0.5);
+
+	--sawit-shadow-card: 0 1px 2px 0 oklch(0 0 0 / 0.5), 0 18px 44px -32px oklch(0 0 0 / 0.9);
+	--sawit-shadow-glow:
+		0 0 0 1px var(--border-accent), 0 24px 64px -30px oklch(0.841 0.238 128.85 / 0.35);
+
+	--sawit-edge-highlight: inset 0 1px 0 oklch(1 0 0 / 0.16);
+	--sawit-edge-shade: inset 0 -1px 0 oklch(0 0 0 / 0.35);
+	--sawit-edge: var(--sawit-edge-highlight), var(--sawit-edge-shade);
 }

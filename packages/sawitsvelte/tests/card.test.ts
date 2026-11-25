@@ -175,6 +175,23 @@ describe('Card polymorphic root', () => {
 
 		expect(element.getAttribute('data-slot')).toBe('card');
 		expect(classTokens(element)).toContain('bg-card');
-		expect(classTokens(element)).toContain('rounded-lg');
+		expect(classTokens(element)).toContain('rounded-xl');
+	});
+});
+
+describe('Card featured treatment', () => {
+	it('marks the root and applies the accent treatment', () => {
+		const root = render(Root as never, { featured: true });
+
+		expect(root.hasAttribute('data-featured')).toBe(true);
+		expect(classTokens(root)).toContain('border-border-accent');
+		expect(classTokens(root)).toContain('shadow-glow');
+	});
+
+	it('is absent by default and keeps the standard elevation', () => {
+		const root = render(Root as never);
+
+		expect(root.hasAttribute('data-featured')).toBe(false);
+		expect(classTokens(root)).toContain('shadow-card');
 	});
 });

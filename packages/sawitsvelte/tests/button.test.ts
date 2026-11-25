@@ -65,6 +65,10 @@ describe('Button rendering', () => {
 		expect(button.dataset.size).toBe('default');
 	});
 
+	it('carries the signature silhouette utility', () => {
+		expect(classTokens(render())).toContain('shape-notch-br');
+	});
+
 	it('allows overriding the native type', () => {
 		expect(render({ type: 'submit' }).getAttribute('type')).toBe('submit');
 	});
@@ -94,7 +98,7 @@ describe('Button variants and sizes', () => {
 		expect(render({ variant: 'default' }).className).toContain('bg-primary');
 		expect(render({ variant: 'ghost' }).className).not.toContain('bg-primary');
 		expect(render({ variant: 'destructive' }).className).toContain('bg-destructive');
-		expect(render({ variant: 'outline' }).className).toContain('border-input');
+		expect(render({ variant: 'outline' }).className).toContain('border-border-strong');
 	});
 
 	const sizes = ['sm', 'default', 'lg', 'icon'] as const;
@@ -108,9 +112,16 @@ describe('Button variants and sizes', () => {
 	}
 
 	it('maps sizes to distinct heights', () => {
-		expect(render({ size: 'sm' }).className).toContain('h-8');
-		expect(render({ size: 'lg' }).className).toContain('h-10');
-		expect(render({ size: 'icon' }).className).toContain('size-9');
+		expect(render({ size: 'sm' }).className).toContain('h-9');
+		expect(render({ size: 'lg' }).className).toContain('h-12');
+		expect(render({ size: 'icon' }).className).toContain('size-11');
+	});
+
+	it('scales the cut with the size', () => {
+		// The notch is a token the size variant overrides, so the silhouette keeps
+		// its proportions instead of shrinking with the label.
+		expect(classTokens(render({ size: 'sm' }))).toContain('[--sawit-notch:12px]');
+		expect(classTokens(render({ size: 'lg' }))).toContain('[--sawit-notch:20px]');
 	});
 
 	it('stretches to full width when asked', () => {

@@ -24,9 +24,9 @@ describe('test environment', () => {
 
 		expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
 		expect(style.backgroundColor).not.toBe(style.color);
-		// `rounded-lg` resolves from --sawit-radius-lg, so a 10px default radius is
-		// proof the bridge mapped the theme rather than Tailwind's defaults.
-		expect(style.borderTopLeftRadius).toBe('10px');
+		// `rounded-lg` resolves from --sawit-radius-lg (12px), so a Tailwind default
+		// radius is proof the bridge mapped our theme rather than its own defaults.
+		expect(style.borderTopLeftRadius).toBe('12px');
 	});
 
 	it('applies the theme through data-theme', () => {

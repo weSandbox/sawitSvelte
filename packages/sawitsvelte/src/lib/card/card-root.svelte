@@ -3,10 +3,17 @@
 	import { mergeProps } from '../internal/merge-props.js';
 	import { cardVariants, type CardRootProps } from './card.svelte.js';
 
-	let { class: className, children, child, ...rest }: CardRootProps = $props();
+	let { class: className, featured = false, children, child, ...rest }: CardRootProps = $props();
 
 	const sharedProps = $derived(
-		mergeProps({ 'data-slot': 'card', class: cn(cardVariants().root(), className) }, rest)
+		mergeProps(
+			{
+				'data-slot': 'card',
+				'data-featured': featured ? '' : undefined,
+				class: cn(cardVariants({ featured }).root(), className)
+			},
+			rest
+		)
 	);
 </script>
 

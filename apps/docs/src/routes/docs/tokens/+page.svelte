@@ -32,7 +32,21 @@
 		{ name: '--sawit-shadow-sm', class: 'shadow-sm' },
 		{ name: '--sawit-shadow-md', class: 'shadow-md' },
 		{ name: '--sawit-shadow-lg', class: 'shadow-lg' },
-		{ name: '--sawit-shadow-xl', class: 'shadow-xl' }
+		{ name: '--sawit-shadow-xl', class: 'shadow-xl' },
+		{ name: '--sawit-shadow-card', class: 'shadow-card' },
+		{ name: '--sawit-shadow-glow', class: 'shadow-glow' }
+	] as const;
+
+	const surfaces = [
+		{ token: 'surface-1', use: 'card' },
+		{ token: 'surface-2', use: 'popover' },
+		{ token: 'surface-3', use: 'muted' }
+	] as const;
+
+	const notches = [
+		{ label: 'sm', notch: '12px', bevel: '5px' },
+		{ label: 'default', notch: '18px', bevel: '6px' },
+		{ label: 'lg', notch: '20px', bevel: '6px' }
 	] as const;
 
 	const layers = [
@@ -138,6 +152,44 @@
 		<p class="text-sm text-muted-foreground">The quick brown fox jumps over the lazy dog</p>
 		<p class="text-xs text-muted-foreground">The quick brown fox jumps over the lazy dog</p>
 		<p class="font-mono text-sm">const tokens = 'fixed-width'</p>
+	</div>
+</section>
+
+<section class="mt-14">
+	<h2 class="text-lg font-semibold tracking-tight">Surfaces</h2>
+	<p class="mt-1 text-sm text-muted-foreground">
+		Elevation is expressed as lightness first and shadow second. Three levels cover every layer:
+		page, card, and raised or interactive.
+	</p>
+	<div class="mt-6 grid grid-cols-3 gap-3">
+		{#each surfaces as surface (surface.token)}
+			<div class="rounded-lg border border-border p-4" style="background: var(--{surface.token})">
+				<div class="text-sm font-medium">{surface.token}</div>
+				<div class="mt-1 font-mono text-[11px] text-muted-foreground">{surface.use}</div>
+			</div>
+		{/each}
+	</div>
+</section>
+
+<section class="mt-14">
+	<h2 class="text-lg font-semibold tracking-tight">Shape</h2>
+	<p class="mt-1 text-sm text-muted-foreground">
+		Corners are cut at 45° rather than rounded. Two tokens drive the silhouette — a small bevel and
+		one deep notch — and <code class="font-mono text-xs">shape-notch-br</code> can be applied to any element,
+		not just components.
+	</p>
+	<div class="mt-6 flex flex-wrap items-end gap-6">
+		{#each notches as item (item.label)}
+			<div class="flex flex-col gap-2">
+				<div
+					class="flex h-11 items-center justify-center border border-border bg-surface-2 px-5 text-sm shape-notch-br"
+					style="--sawit-notch: {item.notch}; --sawit-bevel: {item.bevel}"
+				>
+					{item.label}
+				</div>
+				<span class="font-mono text-[11px] text-muted-foreground">notch {item.notch}</span>
+			</div>
+		{/each}
 	</div>
 </section>
 

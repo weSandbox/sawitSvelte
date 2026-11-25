@@ -10,15 +10,29 @@ import type { ClassValue } from '../internal/cn.js';
  * never multiplies padding: each part only owns its horizontal inset. That is
  * what lets Header, Content and Footer be used in any combination — including
  * omitting any of them — without the gaps changing.
+ *
+ * Unlike the button, the card is not clipped. A surface needs real elevation
+ * more than it needs a cut, and `clip-path` would remove the shadow entirely.
+ * The signature lives in the corner bracket and the layered surface instead.
  */
 export const cardVariants = tv({
 	slots: {
-		root: 'flex flex-col gap-6 rounded-lg border border-border bg-card py-6 text-card-foreground shadow-xs',
-		header: 'flex flex-col gap-1.5 px-6',
-		title: 'text-base leading-none font-semibold tracking-tight',
-		description: 'text-sm text-muted-foreground',
+		root: 'corner-accent relative flex flex-col gap-6 rounded-xl border border-border bg-card py-6 text-card-foreground shadow-card',
+		header: 'flex flex-col gap-2 px-6',
+		title: 'text-base leading-tight font-semibold tracking-tight',
+		description: 'text-sm leading-relaxed text-muted-foreground',
 		content: 'px-6',
 		footer: 'flex items-center gap-2 px-6'
+	},
+	variants: {
+		featured: {
+			true: {
+				root: 'border-border-accent shadow-glow'
+			}
+		}
+	},
+	defaultVariants: {
+		featured: false
 	}
 });
 
@@ -43,6 +57,8 @@ export type CardPartProps<T extends EventTarget> = Omit<HTMLAttributes<T>, 'clas
  * because their element type is fixed by what the slot means.
  */
 export type CardRootProps = CardPartProps<HTMLDivElement> & {
+	/** Highlighted treatment: accent border, accent bloom, brighter corner bracket. */
+	featured?: boolean;
 	child?: Snippet<[{ props: CardChildProps }]>;
 };
 
