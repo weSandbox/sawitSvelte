@@ -1,0 +1,45 @@
+{
+	"name": "sawitsvelte",
+	"version": "0.0.1",
+	"description": "A modern, accessible, customizable UI component framework built natively for Svelte 5.",
+	"license": "MIT",
+	"type": "module",
+	"sideEffects": [
+		"**/*.css"
+	],
+	"files": [
+		"dist",
+		"!dist/**/*.test.*",
+		"!dist/**/*.spec.*"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"svelte": "./dist/index.js",
+			"default": "./dist/index.js"
+		},
+		"./theme.css": "./dist/theme.css",
+		"./package.json": "./package.json"
+	},
+	"scripts": {
+		"build": "svelte-package -i src/lib -o dist && node scripts/build-css.mjs",
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"test": "vitest run"
+	},
+	"peerDependencies": {
+		"svelte": "^5.0.0"
+	},
+	"devDependencies": {
+		"@sawitsvelte/tokens": "workspace:*",
+		"@sawitsvelte/tsconfig": "workspace:*",
+		"@sveltejs/package": "^3.0.3",
+		"@sveltejs/vite-plugin-svelte": "^7.3.2",
+		"svelte": "^5.57.3",
+		"svelte-check": "^4.7.8",
+		"typescript": "^6.0.3",
+		"vitest": "^5.1.1"
+	},
+	"dependencies": {
+		"tailwind-merge": "^3.7.1"
+	}
+}

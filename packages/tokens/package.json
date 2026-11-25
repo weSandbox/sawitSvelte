@@ -1,0 +1,27 @@
+{
+	"name": "@sawitsvelte/tokens",
+	"version": "0.0.1",
+	"description": "Design tokens for sawitSvelte — CSS-variable palette, semantic tokens, and the Tailwind theme bridge.",
+	"license": "MIT",
+	"type": "module",
+	"style": "./dist/theme.css",
+	"files": [
+		"dist",
+		"src"
+	],
+	"exports": {
+		".": "./dist/theme.css",
+		"./theme.css": "./dist/theme.css",
+		"./palette.css": "./src/palette.css",
+		"./semantic.css": "./src/semantic.css",
+		"./base.css": "./src/base.css",
+		"./bridge.css": "./src/bridge.css",
+		"./package.json": "./package.json"
+	},
+	"scripts": {
+		"build": "node scripts/build-css.mjs"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

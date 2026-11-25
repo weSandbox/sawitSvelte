@@ -1,0 +1,8 @@
+/*
+ * The entire framework setup. Three lines of CSS is the whole installation
+ * contract: Tailwind, our tokens + bridge, and a source hint so Tailwind can
+ * find the component class strings inside the published package.
+ */
+@import 'tailwindcss';
+@import 'sawitsvelte/theme.css';
+@source '../node_modules/sawitsvelte/dist';

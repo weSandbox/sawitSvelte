@@ -1,0 +1,61 @@
+/*
+ * Base layer. Everything here is deliberately low priority so user utilities
+ * always win, and so components never need to re-declare element defaults.
+ */
+
+@layer base {
+	*,
+	::before,
+	::after {
+		border-color: var(--border);
+	}
+
+	html {
+		-webkit-text-size-adjust: 100%;
+		tab-size: 4;
+	}
+
+	body {
+		background-color: var(--background);
+		color: var(--foreground);
+		font-family: var(--sawit-font-sans);
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	::selection {
+		background-color: var(--primary);
+		color: var(--primary-foreground);
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--ring);
+		outline-offset: 2px;
+	}
+
+	[hidden] {
+		display: none !important;
+	}
+}
+
+/*
+ * Motion is opt-out at the token layer, so every component inherits the
+ * preference without having to remember to ask.
+ */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	::before,
+	::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+/* Windows High Contrast / forced colours: keep focus visible when shadows die. */
+@media (forced-colors: active) {
+	:focus-visible {
+		outline: 2px solid CanvasText;
+	}
+}

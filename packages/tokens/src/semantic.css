@@ -1,0 +1,161 @@
+/*
+ * Tier 2 — semantic tokens. This is the contract components are allowed to read.
+ *
+ * Naming rules:
+ *   - Surface tokens are paired with `<name>-foreground`, the only colour that is
+ *     guaranteed to be legible on that surface. Contrast is correct by construction.
+ *   - Named for role, never for hue. `--destructive`, not `--red`.
+ *   - Anything whose unprefixed name would collide with a Tailwind theme namespace
+ *     (`--radius-*`, `--font-*`, `--shadow-*`, `--ease-*`) carries the `--sawit-` prefix.
+ *     Colour tokens stay short because Tailwind's colour namespace is `--color-*`.
+ */
+
+:root {
+	color-scheme: light;
+
+	--background: var(--sawit-neutral-50);
+	--foreground: var(--sawit-neutral-950);
+
+	--card: oklch(1 0 0);
+	--card-foreground: var(--foreground);
+
+	--popover: oklch(1 0 0);
+	--popover-foreground: var(--foreground);
+
+	--primary: var(--sawit-primary-600);
+	--primary-foreground: var(--sawit-primary-50);
+
+	--secondary: var(--sawit-neutral-100);
+	--secondary-foreground: var(--sawit-neutral-900);
+
+	--muted: var(--sawit-neutral-100);
+	--muted-foreground: var(--sawit-neutral-500);
+
+	--accent: var(--sawit-neutral-100);
+	--accent-foreground: var(--sawit-neutral-900);
+
+	--destructive: oklch(0.577 0.245 27.325);
+	--destructive-foreground: oklch(0.985 0 0);
+	--success: oklch(0.596 0.145 163.225);
+	--success-foreground: oklch(0.985 0 0);
+	--warning: oklch(0.769 0.166 70.08);
+	--warning-foreground: oklch(0.205 0.006 285.885);
+	--info: oklch(0.623 0.214 259.815);
+	--info-foreground: oklch(0.985 0 0);
+
+	--border: var(--sawit-neutral-200);
+	--input: var(--sawit-neutral-200);
+	--ring: var(--sawit-primary-600);
+
+	--chart-1: oklch(0.623 0.214 259.815);
+	--chart-2: oklch(0.596 0.145 163.225);
+	--chart-3: oklch(0.769 0.166 70.08);
+	--chart-4: oklch(0.577 0.245 27.325);
+	--chart-5: oklch(0.541 0.199 303.9);
+
+	--sidebar: var(--sawit-neutral-50);
+	--sidebar-foreground: var(--foreground);
+	--sidebar-primary: var(--primary);
+	--sidebar-primary-foreground: var(--primary-foreground);
+	--sidebar-accent: var(--accent);
+	--sidebar-accent-foreground: var(--accent-foreground);
+	--sidebar-border: var(--border);
+	--sidebar-ring: var(--ring);
+
+	/* Shape, type, elevation, motion and layering — theme-independent. */
+	--sawit-radius: 0.625rem;
+	--sawit-radius-sm: calc(var(--sawit-radius) - 4px);
+	--sawit-radius-md: calc(var(--sawit-radius) - 2px);
+	--sawit-radius-lg: var(--sawit-radius);
+	--sawit-radius-xl: calc(var(--sawit-radius) + 4px);
+
+	--sawit-font-sans:
+		ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	--sawit-font-mono:
+		ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+	--sawit-shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 0.05);
+	--sawit-shadow-sm: 0 1px 3px 0 oklch(0 0 0 / 0.1), 0 1px 2px -1px oklch(0 0 0 / 0.1);
+	--sawit-shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.1), 0 2px 4px -2px oklch(0 0 0 / 0.1);
+	--sawit-shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.1), 0 4px 6px -4px oklch(0 0 0 / 0.1);
+	--sawit-shadow-xl: 0 20px 25px -5px oklch(0 0 0 / 0.1), 0 8px 10px -6px oklch(0 0 0 / 0.1);
+
+	--sawit-duration-fast: 120ms;
+	--sawit-duration-base: 180ms;
+	--sawit-duration-slow: 280ms;
+	--sawit-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+	--sawit-ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+
+	/* One documented stacking order, so overlays never fight each other. */
+	--sawit-z-dropdown: 1000;
+	--sawit-z-sticky: 1100;
+	--sawit-z-overlay: 1200;
+	--sawit-z-modal: 1300;
+	--sawit-z-popover: 1400;
+	--sawit-z-toast: 1500;
+	--sawit-z-tooltip: 1600;
+}
+
+/*
+ * Dark theme. Accent tokens move to their lighter 400 step and take a dark
+ * foreground, which keeps contrast high instead of washing accents out.
+ */
+[data-theme='dark'] {
+	color-scheme: dark;
+
+	--background: var(--sawit-neutral-950);
+	--foreground: var(--sawit-neutral-50);
+
+	--card: var(--sawit-neutral-900);
+	--card-foreground: var(--foreground);
+
+	--popover: var(--sawit-neutral-900);
+	--popover-foreground: var(--foreground);
+
+	--primary: var(--sawit-primary-400);
+	--primary-foreground: var(--sawit-neutral-950);
+
+	--secondary: var(--sawit-neutral-800);
+	--secondary-foreground: var(--sawit-neutral-100);
+
+	--muted: var(--sawit-neutral-800);
+	--muted-foreground: var(--sawit-neutral-400);
+
+	--accent: var(--sawit-neutral-800);
+	--accent-foreground: var(--sawit-neutral-100);
+
+	--destructive: oklch(0.704 0.191 22.216);
+	--destructive-foreground: var(--sawit-neutral-950);
+	--success: oklch(0.765 0.177 163.223);
+	--success-foreground: var(--sawit-neutral-950);
+	--warning: oklch(0.828 0.189 84.429);
+	--warning-foreground: var(--sawit-neutral-950);
+	--info: oklch(0.707 0.165 254.624);
+	--info-foreground: var(--sawit-neutral-950);
+
+	--border: oklch(1 0 0 / 12%);
+	--input: oklch(1 0 0 / 16%);
+	--ring: var(--sawit-primary-500);
+
+	--chart-1: oklch(0.707 0.165 254.624);
+	--chart-2: oklch(0.765 0.177 163.223);
+	--chart-3: oklch(0.828 0.189 84.429);
+	--chart-4: oklch(0.704 0.191 22.216);
+	--chart-5: oklch(0.68 0.178 304.47);
+
+	--sidebar: var(--sawit-neutral-900);
+	--sidebar-foreground: var(--foreground);
+	--sidebar-primary: var(--primary);
+	--sidebar-primary-foreground: var(--primary-foreground);
+	--sidebar-accent: var(--accent);
+	--sidebar-accent-foreground: var(--accent-foreground);
+	--sidebar-border: var(--border);
+	--sidebar-ring: var(--ring);
+
+	/* Elevation reads as shadow on dark surfaces only if the alpha is stronger. */
+	--sawit-shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 0.4);
+	--sawit-shadow-sm: 0 1px 3px 0 oklch(0 0 0 / 0.5), 0 1px 2px -1px oklch(0 0 0 / 0.5);
+	--sawit-shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.5), 0 2px 4px -2px oklch(0 0 0 / 0.5);
+	--sawit-shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.5), 0 4px 6px -4px oklch(0 0 0 / 0.5);
+	--sawit-shadow-xl: 0 20px 25px -5px oklch(0 0 0 / 0.5), 0 8px 10px -6px oklch(0 0 0 / 0.5);
+}
